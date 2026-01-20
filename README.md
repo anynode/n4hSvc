@@ -47,6 +47,18 @@ Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittst
 | `ipv6` | IPv6 aktivieren | `false` |
 | `passwords` | Liste von codierten Passwörtern | `[]` |
 
+> ⚠️ **Wichtig:** Der `loglevel` sollte im Normalbetrieb auf **"0 - Only Errors"** stehen. Höhere Log-Level erzeugen große Mengen an Protokolldaten, die den Speicher füllen und den Systembetrieb beeinträchtigen können. Verwenden Sie höhere Log-Level nur zur Fehlerdiagnose und setzen Sie den Wert danach zurück.
+
+### 💡 Tipp: Serielle Schnittstellen finden
+
+Nach dem Start des Add-ons werden im **Protokoll** alle verfügbaren seriellen Schnittstellen angezeigt:
+
+- USB Serielle Geräte (`/dev/ttyUSB*`, `/dev/ttyACM*`)
+- Eingebaute Serielle Geräte (`/dev/ttyAMA*`, `/dev/ttyS*`)
+- Geräte nach ID (`/dev/serial/by-id/...`) - **empfohlen für stabile Konfiguration**
+
+Gehen Sie zu **Add-on → Protokoll**, um die Liste der erkannten Schnittstellen zu sehen und den richtigen `comport` zu konfigurieren.
+
 ## Verwandte Projekte
 
 - **[net4home Home Assistant Integration](https://github.com/anynode/net4home)** - Die Custom Component für Home Assistant zur Integration von net4home Geräten

@@ -204,25 +204,6 @@ if [ ! -f "$INTERPRETER" ] && [ ! -f "$INTERPRETER_ALT" ]; then
 fi
 
 # Check for required libraries and create symlinks if needed
-log_info "Prüfe benötigte Bibliotheken..."
-log_info "Suche nach libconfig.so..."
-for search_path in /usr/lib /lib /usr/lib64 /lib64; do
-    if [ -d "$search_path" ]; then
-        find "$search_path" -name "libconfig.so*" 2>/dev/null | head -3 | while IFS= read -r lib; do
-            log_info "  Gefunden: $lib"
-        done || true
-    fi
-done
-
-log_info "Suche nach libblkid.so..."
-for search_path in /usr/lib /lib /usr/lib64 /lib64; do
-    if [ -d "$search_path" ]; then
-        find "$search_path" -name "libblkid.so*" 2>/dev/null | head -3 | while IFS= read -r lib; do
-            log_info "  Gefunden: $lib"
-        done || true
-    fi
-done
-
 LIB_CONFIG_FOUND=$(find /usr/lib /lib /usr/lib64 /lib64 -name "libconfig.so*" 2>/dev/null | head -1) || true
 LIB_BLKID_FOUND=$(find /usr/lib /lib /usr/lib64 /lib64 -name "libblkid.so*" 2>/dev/null | head -1) || true
 
@@ -230,84 +211,51 @@ LIB_BLKID_FOUND=$(find /usr/lib /lib /usr/lib64 /lib64 -name "libblkid.so*" 2>/d
 LIB_PATHS="/usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu /usr/lib /lib /usr/lib64 /lib64"
 
 if [ -z "$LIB_CONFIG_FOUND" ]; then
-    log_error "FEHLT: libconfig.so nicht gefunden!"
-    log_error "Versuche manuelle Installation..."
-    # Try to install at runtime (if possible)
+    log_error "FEHLT: libconfig.so nicht gefunden! Versuche Installation..."
     if [ -f /etc/alpine-release ]; then
-        log_info "Alpine erkannt - versuche libconfig zu installieren..."
-        apk add --no-cache libconfig libconfig-dev 2>&1 || true
-        log_info "libconfig Installation abgeschlossen"
+        apk add --no-cache libconfig libconfig-dev >/dev/null 2>&1 || true
     elif [ -f /etc/debian_version ]; then
-        log_info "Debian erkannt - versuche libconfig9 zu installieren..."
-        apt-get update && apt-get install -y --no-install-recommends libconfig9 2>&1 || true
-        log_info "libconfig9 Installation abgeschlossen"
+        apt-get update >/dev/null 2>&1 && apt-get install -y --no-install-recommends libconfig9 >/dev/null 2>&1 || true
     fi
-    # Re-search for library after installation
-    log_info "Suche erneut nach libconfig.so..."
     LIB_CONFIG_FOUND=$(find /usr/lib /lib /usr/lib64 /lib64 -name "libconfig.so*" 2>/dev/null | head -1) || true
     if [ -z "$LIB_CONFIG_FOUND" ]; then
-        log_error "libconfig.so konnte nicht gefunden werden nach Installation!"
-    else
-        log_info "libconfig.so gefunden nach Installation: $LIB_CONFIG_FOUND"
+        log_error "libconfig.so konnte nicht gefunden werden!"
     fi
 fi
 
-log_info "Weiter mit libblkid..."
-
 if [ -n "$LIB_CONFIG_FOUND" ]; then
-    log_info "libconfig gefunden: $LIB_CONFIG_FOUND"
-    # Create symlinks in all common paths
     for lib_path in $LIB_PATHS; do
         if [ ! -f "$lib_path/libconfig.so.9" ]; then
             mkdir -p "$lib_path" 2>/dev/null || true
-            ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null && \
-            log_info "Symlink erstellt: $lib_path/libconfig.so.9 -> $LIB_CONFIG_FOUND" && break || true
+            ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null && break || true
         else
-            log_info "libconfig.so.9 bereits vorhanden: $lib_path/libconfig.so.9"
             break
         fi
     done
 fi
 
 if [ -z "$LIB_BLKID_FOUND" ]; then
-    log_error "FEHLT: libblkid.so nicht gefunden!"
-    log_error "Versuche manuelle Installation..."
-    # Try to install at runtime (if possible)
+    log_error "FEHLT: libblkid.so nicht gefunden! Versuche Installation..."
     if [ -f /etc/alpine-release ]; then
-        log_info "Alpine erkannt - versuche libblkid zu installieren..."
-        # Try different package names that might contain libblkid
-        apk add --no-cache libblkid 2>&1 || \
-        apk add --no-cache util-linux 2>&1 || \
-        apk add --no-cache util-linux-dev 2>&1 || \
-        apk add --no-cache blkid 2>&1 || true
-        log_info "libblkid Installation abgeschlossen"
+        apk add --no-cache libblkid >/dev/null 2>&1 || \
+        apk add --no-cache util-linux >/dev/null 2>&1 || \
+        apk add --no-cache util-linux-dev >/dev/null 2>&1 || \
+        apk add --no-cache blkid >/dev/null 2>&1 || true
     elif [ -f /etc/debian_version ]; then
-        log_info "Debian erkannt - versuche libblkid1 zu installieren..."
-        apt-get update && apt-get install -y --no-install-recommends libblkid1 util-linux 2>&1 || true
-        log_info "libblkid1 Installation abgeschlossen"
+        apt-get update >/dev/null 2>&1 && apt-get install -y --no-install-recommends libblkid1 util-linux >/dev/null 2>&1 || true
     fi
-    # Re-search for library after installation
-    log_info "Suche erneut nach libblkid.so..."
     LIB_BLKID_FOUND=$(find /usr/lib /lib /usr/lib64 /lib64 -name "libblkid.so*" 2>/dev/null | head -1) || true
     if [ -z "$LIB_BLKID_FOUND" ]; then
-        log_error "libblkid.so konnte nicht gefunden werden nach Installation!"
-    else
-        log_info "libblkid.so gefunden nach Installation: $LIB_BLKID_FOUND"
+        log_error "libblkid.so konnte nicht gefunden werden!"
     fi
 fi
 
-log_info "Bibliotheken-Prüfung abgeschlossen"
-
 if [ -n "$LIB_BLKID_FOUND" ]; then
-    log_info "libblkid gefunden: $LIB_BLKID_FOUND"
-    # Create symlinks in all common paths
     for lib_path in $LIB_PATHS; do
         if [ ! -f "$lib_path/libblkid.so.1" ]; then
             mkdir -p "$lib_path" 2>/dev/null || true
-            ln -sf "$LIB_BLKID_FOUND" "$lib_path/libblkid.so.1" 2>/dev/null && \
-            log_info "Symlink erstellt: $lib_path/libblkid.so.1 -> $LIB_BLKID_FOUND" && break || true
+            ln -sf "$LIB_BLKID_FOUND" "$lib_path/libblkid.so.1" 2>/dev/null && break || true
         else
-            log_info "libblkid.so.1 bereits vorhanden: $lib_path/libblkid.so.1"
             break
         fi
     done
@@ -319,13 +267,10 @@ if [ -z "${LD_LIBRARY_PATH:-}" ]; then
 else
     export LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu:/lib/aarch64-linux-gnu:/usr/lib:/lib:/usr/lib64:/lib64:${LD_LIBRARY_PATH}"
 fi
-log_info "LD_LIBRARY_PATH gesetzt: $LD_LIBRARY_PATH"
 
-# Copy config to expected location (might need to be in current directory or specific path)
+# Copy config to expected location
 cp /data/n4hSvc.cfg /n4hSvc.cfg 2>/dev/null || true
 cp /data/n4hSvc.cfg /etc/n4hSvc.cfg 2>/dev/null || true
-
-log_info "Konfigurationsdatei kopiert nach: /n4hSvc.cfg und /etc/n4hSvc.cfg"
 
 # ==========================================
 # SERIELLE SCHNITTSTELLEN ERKENNUNG
