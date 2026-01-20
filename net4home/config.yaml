@@ -1,0 +1,34 @@
+name: "net4home Server"
+description: "Add-on für den net4home Server (n4hSvc) - Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittstelle."
+version: "1.0.0"
+slug: "net4home"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armv7
+  - armhf
+startup: "services"
+boot: "auto"
+uart: true
+usb: true
+full_access: true
+privileged:
+  - SYS_ADMIN
+  - SYS_RAWIO
+  - NET_ADMIN
+options:
+  loglevel: 0
+  port: 3478
+  comport: "/dev/ttyUSB0"
+  noPasswords: true
+  ipv6: false
+  passwords: []
+schema:
+  loglevel: "int(0,10)"
+  port: "int"
+  comport: "str"
+  noPasswords: "bool"
+  ipv6: "bool"
+  passwords:
+    - "str"
