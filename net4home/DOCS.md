@@ -18,12 +18,11 @@ Dieses Add-on stellt den **net4home Server (n4hSvc)** als Home Assistant Add-on 
 
 Steuert die Ausführlichkeit der Protokollierung:
 
-- **0**: Normal, nur Fehler werden protokolliert (empfohlen für Produktion)
-- **1-8**: Zunehmend detailliertere Protokollierung
-- **9**: Zusätzlich Buspakete werden protokolliert (Debug)
-- **10**: Zusätzlich Passwörter werden protokolliert (Achtung: Sicherheitsrisiko!)
+- **0 - Only Errors**: Normal, nur Fehler werden protokolliert (empfohlen für Produktion)
+- **9 - Errors and Buspackets**: Zusätzlich Buspakete werden protokolliert (Debug)
+- **10 - All**: Alle Informationen inkl. Passwörter werden protokolliert (Achtung: Sicherheitsrisiko!)
 
-**Standardwert**: 0
+**Standardwert**: 0 - Only Errors
 
 ### Port
 

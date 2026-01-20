@@ -21,7 +21,10 @@ log_info "=========================================="
 
 # Read configuration from Home Assistant
 log_info "Lese Konfiguration aus Home Assistant..."
-LOG_LEVEL=$(bashio::config 'loglevel')
+LOG_LEVEL_RAW=$(bashio::config 'loglevel')
+# Extract numeric value from loglevel (format: "X - Description")
+LOG_LEVEL=$(echo "$LOG_LEVEL_RAW" | cut -d' ' -f1)
+log_info "Log Level: $LOG_LEVEL_RAW -> $LOG_LEVEL"
 PORT=$(bashio::config 'port')
 COMPORT=$(bashio::config 'comport')
 NO_PASSWORDS=$(bashio::config 'noPasswords')

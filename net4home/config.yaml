@@ -18,14 +18,14 @@ privileged:
   - SYS_RAWIO
   - NET_ADMIN
 options:
-  loglevel: 0
+  loglevel: "0 - Only Errors"
   port: 3478
   comport: "/dev/ttyUSB0"
   noPasswords: true
   ipv6: false
   passwords: []
 schema:
-  loglevel: "int(0,10)"
+  loglevel: "list(0 - Only Errors|9 - Errors and Buspackets|10 - All)"
   port: "int"
   comport: "str"
   noPasswords: "bool"

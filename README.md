@@ -29,7 +29,7 @@ Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittst
 
 | Option | Beschreibung | Standard |
 |--------|-------------|----------|
-| `loglevel` | Log-Level (0-10) | `0` |
+| `loglevel` | Log-Level: Only Errors / Errors and Buspackets / All | `0 - Only Errors` |
 | `port` | TCP/IP Port | `3478` |
 | `comport` | Serieller Port | `/dev/ttyUSB0` |
 | `noPasswords` | Passwort-Logging deaktivieren | `true` |
