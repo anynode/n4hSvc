@@ -1,6 +1,6 @@
 name: "net4home Server"
 description: "Add-on für den net4home Server (n4hSvc) - Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittstelle."
-version: "1.2.0"
+version: "1.3.0"
 slug: "net4home"
 init: false
 host_network: true
@@ -26,7 +26,7 @@ options:
   ipv6: false
   passwords: []
 schema:
-  loglevel: "list(0 - Only Errors|9 - Errors and Buspackets|10 - All)"
+  loglevel: "select(0 - Only Errors|9 - Errors and Buspackets|10 - All)"
   port: "int"
   comport: "str"
   noPasswords: "bool"
