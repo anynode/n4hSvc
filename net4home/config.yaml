@@ -1,6 +1,6 @@
 name: "net4home Server"
 description: "Add-on für den net4home Server (n4hSvc) - Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittstelle."
-version: "1.0.0"
+version: "1.1.0"
 slug: "net4home"
 init: false
 arch:
