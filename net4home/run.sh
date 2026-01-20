@@ -37,11 +37,11 @@ else
     NO_PASSWORDS_INT=0
 fi
 
-# Convert ipv6 boolean to int
+# Convert ipv6 boolean to int (inverted: switch ON = ipv6 enabled)
 if [ "$IPV6" = "true" ]; then
-    IPV6_INT=1
-else
     IPV6_INT=0
+else
+    IPV6_INT=1
 fi
 
 # Create config directory if it doesn't exist
