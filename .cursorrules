@@ -1,8 +1,10 @@
 # Cursor Rules für n4hSvc Projekt
 
-## Automatische Versionierung bei Commits
+## Versionierung bei Commits (MANUELL)
 
-Bei **jedem Git Commit** muss die **Minor-Version** (mittlere Zahl) hochgezählt werden.
+**KEIN automatisches Commit!** Commits werden nur durchgeführt, wenn der User es explizit anfordert.
+
+Bei **jedem Git Commit** (wenn angefordert) muss die **PATCH-Version** (letzte Zahl) hochgezählt werden.
 
 ### Versionierungsschema
 
@@ -23,7 +25,7 @@ Die Version muss in folgenden Dateien aktualisiert werden:
 Bevor ein `git commit` ausgeführt wird:
 
 1. Aktuelle Version aus `net4home/config.yaml` lesen
-2. Minor-Version um 1 erhöhen (z.B. `1.5.0` → `1.6.0`)
+2. PATCH-Version um 1 erhöhen (z.B. `1.5.0` → `1.5.1`)
 3. Version in `net4home/config.yaml` aktualisieren
 4. Commit mit der neuen Version durchführen
 
@@ -34,10 +36,10 @@ Bevor ein `git commit` ausgeführt wird:
 version: "1.5.0"
 
 # Nachher (nach Commit)
-version: "1.6.0"
+version: "1.5.1"
 ```
 
 ### Commit-Nachricht
 
 Die Commit-Nachricht sollte die neue Version enthalten oder zumindest aussagekräftig sein.
-Bei reinen Versionsupdates: `Bump version to X.Y.0`
+Bei reinen Versionsupdates: `Bump version to X.Y.Z`
