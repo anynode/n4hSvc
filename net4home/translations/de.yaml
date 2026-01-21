@@ -1,0 +1,25 @@
+configuration:
+  loglevel:
+    name: "Log-Level"
+    description: "Log-Level (0-10): 0 = Nur Fehler, 9 = Fehler und Buspakete, 10 = Alles"
+  port:
+    name: "TCP/IP Port"
+    description: "Der TCP/IP Port, auf dem der Server lauscht"
+  comport:
+    name: "Serieller Port"
+    description: "Das serielle Gerät, über das die Kommunikation mit den net4home Geräten erfolgt"
+  noPasswords:
+    name: "Passwort-Logging deaktivieren"
+    description: "Wenn aktiviert, werden Passwörter nicht in den Logs protokolliert (Sicherheitsfeature)"
+  ipv6:
+    name: "IPv6 aktivieren"
+    description: "Aktiviert die Unterstützung für IPv6"
+  passwords:
+    name: "Passwörter"
+    description: "Liste von codierten Passwörtern im Hex-Format (jedes Passwort muss genau 32 Hex-Zeichen lang sein)"
+  enableHSTime:
+    name: "Zeitmodul (HS-Time) aktivieren"
+    description: "Installiert und startet das HSTime Service. HSTime startet automatisch nach n4hSvc."
+  enableHSPacketRouter:
+    name: "Packetrouter (HS-PacketRouter) aktivieren"
+    description: "Installiert und startet das HS-PacketRouter Service. HSpr startet automatisch nach HSTime."
