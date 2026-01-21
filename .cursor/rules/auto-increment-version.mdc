@@ -8,7 +8,7 @@ alwaysApply: true
 
 ## Regel
 
-**Vor jedem Git-Commit** muss die Patch-Version in `net4home/config.yaml` automatisch um 1 erhöht werden.
+**Vor jedem Git-Commit** muss die Patch-Version in `net4home/config.yaml` automatisch um 1 erhöht werden **und** das CHANGELOG.md muss aktualisiert werden.
 
 ## Implementierung
 
@@ -17,12 +17,18 @@ alwaysApply: true
 1. **Version lesen**: Die aktuelle Version aus `net4home/config.yaml` Zeile 3 lesen (Format: `version: "X.Y.Z"`)
 2. **Patch-Version erhöhen**: Die letzte Zahl (Z) um 1 erhöhen
 3. **Version aktualisieren**: Die neue Version in `net4home/config.yaml` schreiben
-4. **Commit**: Die geänderte `config.yaml` muss Teil des Commits sein
+4. **CHANGELOG.md aktualisieren**: 
+   - Neue Version-Sektion am Anfang des CHANGELOG.md hinzufügen (nach `# Changelog`)
+   - Format: `## [X.Y.Z] - YYYY-MM-DD`
+   - Aktuelles Datum verwenden
+   - Leere Sektionen für `### Added`, `### Changed`, `### Fixed` hinzufügen (falls nicht vorhanden)
+5. **Commit**: Die geänderten `config.yaml` und `CHANGELOG.md` müssen Teil des Commits sein
 
-**Wichtig**: Dies muss **automatisch** geschehen, wenn der Benutzer "commit" sagt oder einen Commit durchführt. Der AI-Agent soll nicht fragen, sondern die Version automatisch erhöhen.
+**Wichtig**: Dies muss **automatisch** geschehen, wenn der Benutzer "commit" sagt oder einen Commit durchführt. Der AI-Agent soll nicht fragen, sondern die Version automatisch erhöhen und das CHANGELOG aktualisieren.
 
 ## Beispiel
 
+**config.yaml:**
 ```yaml
 # Vorher:
 version: "1.3.3"
@@ -31,11 +37,29 @@ version: "1.3.3"
 version: "1.3.4"
 ```
 
+**CHANGELOG.md:**
+```markdown
+# Changelog
+
+## [1.3.4] - 2026-01-21
+
+### Added
+
+### Changed
+
+### Fixed
+
+## [1.3.3] - 2026-01-21
+...
+```
+
 ## Wichtig
 
-- **Immer vor dem Commit ausführen**: Die Versionserhöhung muss **vor** dem `git commit` Befehl erfolgen
+- **Immer vor dem Commit ausführen**: Die Versionserhöhung und CHANGELOG-Aktualisierung muss **vor** dem `git commit` Befehl erfolgen
 - **Nur Patch-Version**: Nur die letzte Zahl (Patch-Version) wird erhöht, Major (X) und Minor (Y) bleiben unverändert
 - **Automatisch**: Diese Regel sollte automatisch angewendet werden, ohne dass der Benutzer explizit danach fragen muss
+- **CHANGELOG-Format**: Neue Version-Sektion muss direkt nach `# Changelog` eingefügt werden, vor der bisherigen neuesten Version
+- **Datum**: Aktuelles Datum im Format `YYYY-MM-DD` verwenden
 
 ## Implementierungs-Beispiel
 
@@ -62,6 +86,14 @@ Set-Content -Path net4home\config.yaml -Value $content -NoNewline
 **Oder mit search_replace Tool:**
 - `old_string`: `version: "1.3.3"` (aktuelle Version)
 - `new_string`: `version: "1.3.4"` (erhöhte Version)
+
+**CHANGELOG.md aktualisieren:**
+- Neue Version-Sektion nach `# Changelog` einfügen
+- Format: `## [1.3.4] - 2026-01-21` (mit aktuellem Datum)
+- Leere Sektionen `### Added`, `### Changed`, `### Fixed` hinzufügen
+- Beispiel mit search_replace:
+  - `old_string`: `# Changelog\n\n## [1.3.3] - 2026-01-21`
+  - `new_string`: `# Changelog\n\n## [1.3.4] - 2026-01-21\n\n### Added\n\n### Changed\n\n### Fixed\n\n## [1.3.3] - 2026-01-21`
 
 ## Ausnahmen
 
