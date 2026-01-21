@@ -1,0 +1,69 @@
+---
+description: Automatische Patch-Version Erhöhung bei Commits
+globs: net4home/config.yaml
+alwaysApply: true
+---
+
+# Automatische Versionserhöhung
+
+## Regel
+
+**Vor jedem Git-Commit** muss die Patch-Version in `net4home/config.yaml` automatisch um 1 erhöht werden.
+
+## Implementierung
+
+**Der AI-Agent muss dies automatisch vor jedem Commit durchführen:**
+
+1. **Version lesen**: Die aktuelle Version aus `net4home/config.yaml` Zeile 3 lesen (Format: `version: "X.Y.Z"`)
+2. **Patch-Version erhöhen**: Die letzte Zahl (Z) um 1 erhöhen
+3. **Version aktualisieren**: Die neue Version in `net4home/config.yaml` schreiben
+4. **Commit**: Die geänderte `config.yaml` muss Teil des Commits sein
+
+**Wichtig**: Dies muss **automatisch** geschehen, wenn der Benutzer "commit" sagt oder einen Commit durchführt. Der AI-Agent soll nicht fragen, sondern die Version automatisch erhöhen.
+
+## Beispiel
+
+```yaml
+# Vorher:
+version: "1.3.3"
+
+# Nachher (nach Commit):
+version: "1.3.4"
+```
+
+## Wichtig
+
+- **Immer vor dem Commit ausführen**: Die Versionserhöhung muss **vor** dem `git commit` Befehl erfolgen
+- **Nur Patch-Version**: Nur die letzte Zahl (Patch-Version) wird erhöht, Major (X) und Minor (Y) bleiben unverändert
+- **Automatisch**: Diese Regel sollte automatisch angewendet werden, ohne dass der Benutzer explizit danach fragen muss
+
+## Implementierungs-Beispiel
+
+Wenn die aktuelle Version `1.3.3` ist:
+
+1. Regex-Pattern: `version: "(\d+)\.(\d+)\.(\d+)"`
+2. Match: `1.3.3` → Major=1, Minor=3, Patch=3
+3. Patch erhöhen: 3 + 1 = 4
+4. Neue Version: `1.3.4`
+5. Ersetzen: `version: "1.3.3"` → `version: "1.3.4"`
+
+**PowerShell Beispiel:**
+```powershell
+$content = Get-Content net4home\config.yaml -Raw
+$content = $content -replace 'version:\s*"(\d+)\.(\d+)\.(\d+)"', {
+    $major = [int]$matches[1]
+    $minor = [int]$matches[2]
+    $patch = [int]$matches[3] + 1
+    "version: `"$major.$minor.$patch`""
+}
+Set-Content -Path net4home\config.yaml -Value $content -NoNewline
+```
+
+**Oder mit search_replace Tool:**
+- `old_string`: `version: "1.3.3"` (aktuelle Version)
+- `new_string`: `version: "1.3.4"` (erhöhte Version)
+
+## Ausnahmen
+
+- Wenn der Benutzer explizit sagt, dass die Version NICHT erhöht werden soll
+- Wenn es sich um einen Merge-Commit handelt (optional)
