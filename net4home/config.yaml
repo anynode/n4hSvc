@@ -29,7 +29,7 @@ options:
 schema:
   loglevel: list(0 - Only Errors|9 - Errors and Buspackets|10 - All)?
   port: port
-  comport: device(subsystem=tty)
+  comport: str
   noPasswords: bool
   ipv6: bool
   passwords: password
