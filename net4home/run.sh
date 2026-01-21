@@ -462,17 +462,42 @@ log_info "Starte n4hSvc im Hintergrund..."
 /usr/bin/n4hSvc /data/n4hSvc.cfg > /tmp/n4hSvc.log 2>&1 &
 N4HSVC_PID=$!
 
-# Check if n4hSvc started successfully
+# Wait a moment to check if process crashed immediately
+sleep 1
+
+# Check if n4hSvc is still running
 if [ -z "$N4HSVC_PID" ] || ! kill -0 "$N4HSVC_PID" 2>/dev/null; then
-    log_error "Fehler beim Start von n4hSvc, versuche mit n4hSvc.cfg..."
+    log_error "n4hSvc ist sofort nach dem Start beendet!"
+    if [ -f /tmp/n4hSvc.log ]; then
+        log_error "Letzte Ausgabe von n4hSvc:"
+        tail -n 20 /tmp/n4hSvc.log | while IFS= read -r line || [ -n "$line" ]; do
+            log_error "  $line"
+        done
+    fi
+    log_error "Versuche mit n4hSvc.cfg..."
     /usr/bin/n4hSvc n4hSvc.cfg > /tmp/n4hSvc.log 2>&1 &
     N4HSVC_PID=$!
+    sleep 1
     if [ -z "$N4HSVC_PID" ] || ! kill -0 "$N4HSVC_PID" 2>/dev/null; then
-        log_error "Fehler beim Start mit relativem Pfad, versuche ohne Argumente..."
+        log_error "Auch mit relativem Pfad fehlgeschlagen!"
+        if [ -f /tmp/n4hSvc.log ]; then
+            log_error "Letzte Ausgabe:"
+            tail -n 20 /tmp/n4hSvc.log | while IFS= read -r line || [ -n "$line" ]; do
+                log_error "  $line"
+            done
+        fi
+        log_error "Versuche ohne Argumente..."
         /usr/bin/n4hSvc > /tmp/n4hSvc.log 2>&1 &
         N4HSVC_PID=$!
+        sleep 1
         if [ -z "$N4HSVC_PID" ] || ! kill -0 "$N4HSVC_PID" 2>/dev/null; then
-            log_error "Alle Startversuche von n4hSvc fehlgeschlagen"
+            log_error "Alle Startversuche von n4hSvc fehlgeschlagen!"
+            if [ -f /tmp/n4hSvc.log ]; then
+                log_error "Letzte Ausgabe:"
+                cat /tmp/n4hSvc.log | while IFS= read -r line || [ -n "$line" ]; do
+                    log_error "  $line"
+                done
+            fi
             exit 1
         fi
     fi
@@ -490,6 +515,18 @@ log_info "n4hSvc gestartet (PID: $N4HSVC_PID)"
 # Wait a moment for n4hSvc to fully initialize
 log_info "Warte auf Initialisierung von n4hSvc..."
 sleep 2
+
+# Check again if process is still running after initialization
+if ! kill -0 "$N4HSVC_PID" 2>/dev/null; then
+    log_error "n4hSvc ist nach der Initialisierung beendet!"
+    if [ -f /tmp/n4hSvc.log ]; then
+        log_error "Letzte Ausgabe:"
+        tail -n 30 /tmp/n4hSvc.log | while IFS= read -r line || [ -n "$line" ]; do
+            log_error "  $line"
+        done
+    fi
+    exit 1
+fi
 
 # Start HSTime if enabled
 HSTIME_PID=""
