@@ -199,61 +199,126 @@ if [ ! -f "$INTERPRETER" ] && [ ! -f "$INTERPRETER_ALT" ]; then
 fi
 
 # Check for required libraries and create symlinks if needed
-LIB_CONFIG_FOUND=$(find /usr/lib /lib /usr/lib64 /lib64 -name "libconfig.so*" 2>/dev/null | head -1) || true
-LIB_BLKID_FOUND=$(find /usr/lib /lib /usr/lib64 /lib64 -name "libblkid.so*" 2>/dev/null | head -1) || true
+# Search in all possible library paths including architecture-specific directories
+log_info "Suche nach benoetigten Bibliotheken..."
+LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1) || true
+LIB_BLKID_FOUND=$(find /usr/lib* /lib* -name "libblkid.so*" 2>/dev/null | head -1) || true
 
-# Common library paths for aarch64
-LIB_PATHS="/usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu /usr/lib /lib /usr/lib64 /lib64"
+# Log found libraries
+if [ -n "$LIB_CONFIG_FOUND" ]; then
+    log_info "libconfig.so gefunden: $LIB_CONFIG_FOUND"
+else
+    log_info "libconfig.so nicht gefunden, suche weiter..."
+fi
+
+if [ -n "$LIB_BLKID_FOUND" ]; then
+    log_info "libblkid.so gefunden: $LIB_BLKID_FOUND"
+else
+    log_info "libblkid.so nicht gefunden, suche weiter..."
+fi
+
+# Common library paths for different architectures
+LIB_PATHS="/usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu /usr/lib/arm-linux-gnueabihf /lib/arm-linux-gnueabihf /usr/lib/x86_64-linux-gnu /lib/x86_64-linux-gnu /usr/lib /lib /usr/lib64 /lib64"
 
 if [ -z "$LIB_CONFIG_FOUND" ]; then
     log_error "FEHLT: libconfig.so nicht gefunden! Versuche Installation..."
     if [ -f /etc/alpine-release ]; then
-        apk add --no-cache libconfig libconfig-dev >/dev/null 2>&1 || true
+        log_info "Installiere libconfig fuer Alpine..."
+        apk add --no-cache libconfig libconfig-dev 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+            log_info "  $line"
+        done || true
     elif [ -f /etc/debian_version ]; then
-        apt-get update >/dev/null 2>&1 && apt-get install -y --no-install-recommends libconfig9 >/dev/null 2>&1 || true
+        log_info "Installiere libconfig9 fuer Debian..."
+        apt-get update 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+            log_info "  $line"
+        done || true
+        apt-get install -y --no-install-recommends libconfig9 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+            log_info "  $line"
+        done || true
     fi
-    LIB_CONFIG_FOUND=$(find /usr/lib /lib /usr/lib64 /lib64 -name "libconfig.so*" 2>/dev/null | head -1) || true
-    if [ -z "$LIB_CONFIG_FOUND" ]; then
-        log_error "libconfig.so konnte nicht gefunden werden!"
+    LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1) || true
+    if [ -n "$LIB_CONFIG_FOUND" ]; then
+        log_info "libconfig.so nach Installation gefunden: $LIB_CONFIG_FOUND"
+    else
+        log_error "libconfig.so konnte auch nach Installation nicht gefunden werden!"
+        log_error "Verfuegbare libconfig Dateien:"
+        find /usr/lib* /lib* -name "*config*" 2>/dev/null | head -10 | while IFS= read -r line || [ -n "$line" ]; do
+            log_error "  $line"
+        done
     fi
 fi
 
 if [ -n "$LIB_CONFIG_FOUND" ]; then
+    log_info "Erstelle Symlinks fuer libconfig.so..."
     for lib_path in $LIB_PATHS; do
-        if [ ! -f "$lib_path/libconfig.so.9" ]; then
+        if [ ! -f "$lib_path/libconfig.so.9" ] && [ ! -f "$lib_path/libconfig.so" ]; then
             mkdir -p "$lib_path" 2>/dev/null || true
-            ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null && break || true
+            if ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null; then
+                log_info "  Symlink erstellt: $lib_path/libconfig.so.9 -> $LIB_CONFIG_FOUND"
+                break
+            fi
         else
+            log_info "  $lib_path/libconfig.so.9 existiert bereits"
             break
         fi
     done
+else
+    log_error "Kann keine Symlinks fuer libconfig.so erstellen - Bibliothek nicht gefunden!"
 fi
 
 if [ -z "$LIB_BLKID_FOUND" ]; then
     log_error "FEHLT: libblkid.so nicht gefunden! Versuche Installation..."
     if [ -f /etc/alpine-release ]; then
-        apk add --no-cache libblkid >/dev/null 2>&1 || \
-        apk add --no-cache util-linux >/dev/null 2>&1 || \
-        apk add --no-cache util-linux-dev >/dev/null 2>&1 || \
-        apk add --no-cache blkid >/dev/null 2>&1 || true
+        log_info "Installiere libblkid fuer Alpine..."
+        apk add --no-cache libblkid 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+            log_info "  $line"
+        done || \
+        apk add --no-cache util-linux 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+            log_info "  $line"
+        done || \
+        apk add --no-cache util-linux-dev 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+            log_info "  $line"
+        done || \
+        apk add --no-cache blkid 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+            log_info "  $line"
+        done || true
     elif [ -f /etc/debian_version ]; then
-        apt-get update >/dev/null 2>&1 && apt-get install -y --no-install-recommends libblkid1 util-linux >/dev/null 2>&1 || true
+        log_info "Installiere libblkid1 fuer Debian..."
+        apt-get update 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+            log_info "  $line"
+        done || true
+        apt-get install -y --no-install-recommends libblkid1 util-linux 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+            log_info "  $line"
+        done || true
     fi
-    LIB_BLKID_FOUND=$(find /usr/lib /lib /usr/lib64 /lib64 -name "libblkid.so*" 2>/dev/null | head -1) || true
-    if [ -z "$LIB_BLKID_FOUND" ]; then
-        log_error "libblkid.so konnte nicht gefunden werden!"
+    LIB_BLKID_FOUND=$(find /usr/lib* /lib* -name "libblkid.so*" 2>/dev/null | head -1) || true
+    if [ -n "$LIB_BLKID_FOUND" ]; then
+        log_info "libblkid.so nach Installation gefunden: $LIB_BLKID_FOUND"
+    else
+        log_error "libblkid.so konnte auch nach Installation nicht gefunden werden!"
+        log_error "Verfuegbare libblkid Dateien:"
+        find /usr/lib* /lib* -name "*blkid*" 2>/dev/null | head -10 | while IFS= read -r line || [ -n "$line" ]; do
+            log_error "  $line"
+        done
     fi
 fi
 
 if [ -n "$LIB_BLKID_FOUND" ]; then
+    log_info "Erstelle Symlinks fuer libblkid.so..."
     for lib_path in $LIB_PATHS; do
-        if [ ! -f "$lib_path/libblkid.so.1" ]; then
+        if [ ! -f "$lib_path/libblkid.so.1" ] && [ ! -f "$lib_path/libblkid.so" ]; then
             mkdir -p "$lib_path" 2>/dev/null || true
-            ln -sf "$LIB_BLKID_FOUND" "$lib_path/libblkid.so.1" 2>/dev/null && break || true
+            if ln -sf "$LIB_BLKID_FOUND" "$lib_path/libblkid.so.1" 2>/dev/null; then
+                log_info "  Symlink erstellt: $lib_path/libblkid.so.1 -> $LIB_BLKID_FOUND"
+                break
+            fi
         else
+            log_info "  $lib_path/libblkid.so.1 existiert bereits"
             break
         fi
     done
+else
+    log_error "Kann keine Symlinks fuer libblkid.so erstellen - Bibliothek nicht gefunden!"
 fi
 
 # Set LD_LIBRARY_PATH to help find libraries
