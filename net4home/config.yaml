@@ -25,11 +25,12 @@ options:
   noPasswords: true
   ipv6: false
   passwords: []
+  enableHSTime: false
 schema:
-  loglevel: "list(0 - Only Errors|9 - Errors and Buspackets|10 - All)"
-  port: "int"
-  comport: "str"
-  noPasswords: "bool"
-  ipv6: "bool"
-  passwords:
-    - "str"
+  loglevel: list(0 - Only Errors|9 - Errors and Buspackets|10 - All)?
+  port: port
+  comport: device(subsystem=tty)
+  noPasswords: bool
+  ipv6: bool
+  passwords: password
+  enableHSTime: bool

@@ -14,7 +14,6 @@ Der net4home Server ist eine **Alternative zum bestehenden net4home HS-Gateway**
 - Kein zusätzliches HS-Gateway erforderlich
 - Direkter Anschluss über USB-Seriell-Adapter
 - Läuft als Home Assistant Add-on
-- Kostengünstige Alternative
 
 ## Add-ons
 
@@ -46,6 +45,7 @@ Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittst
 | `noPasswords` | Passwort-Logging deaktivieren | `true` |
 | `ipv6` | IPv6 aktivieren | `false` |
 | `passwords` | Liste von codierten Passwörtern | `[]` |
+| `enableHSTime` | Zeitmodul (HS-Time) aktivieren | `false` |
 
 > ⚠️ **Wichtig:** Der `loglevel` sollte im Normalbetrieb auf **"0 - Only Errors"** stehen. Höhere Log-Level erzeugen große Mengen an Protokolldaten, die den Speicher füllen und den Systembetrieb beeinträchtigen können. Verwenden Sie höhere Log-Level nur zur Fehlerdiagnose und setzen Sie den Wert danach zurück.
 
