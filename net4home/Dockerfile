@@ -105,12 +105,9 @@ RUN \
 COPY rootfs/ /
 COPY run.sh /run.sh
 
-# Copy HSTime binary (from repository root, build context should be repository root)
-COPY HSTime /usr/bin/HSTime
-
 # Set executable permissions
 RUN chmod a+x /usr/bin/n4hSvc /run.sh || true
-RUN chmod a+x /usr/bin/HSTime || true
+RUN chmod a+x /usr/bin/HSTime 2>/dev/null || true
 
 # Set the startup script as entrypoint
 CMD ["/run.sh"]
