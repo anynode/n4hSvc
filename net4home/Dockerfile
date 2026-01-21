@@ -108,6 +108,7 @@ COPY run.sh /run.sh
 # Set executable permissions
 RUN chmod a+x /usr/bin/n4hSvc /run.sh || true
 RUN chmod a+x /usr/bin/HSTime 2>/dev/null || true
+RUN chmod a+x /usr/bin/HSpr 2>/dev/null || true
 
 # Set the startup script as entrypoint
 CMD ["/run.sh"]
