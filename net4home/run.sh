@@ -28,6 +28,7 @@ COMPORT=$(bashio::config 'comport')
 NO_PASSWORDS=$(bashio::config 'noPasswords')
 IPV6=$(bashio::config 'ipv6')
 ENABLE_HSTIME=$(bashio::config 'enableHSTime')
+ENABLE_HS_PACKET_ROUTER=$(bashio::config 'enableHSPacketRouter')
 
 # Convert noPasswords boolean to int
 if [ "$NO_PASSWORDS" = "true" ]; then
@@ -631,7 +632,45 @@ else
     log_info "Zeitmodul (HS-Time) ist deaktiviert"
 fi
 
-# Monitor both processes
+# Start HS-PacketRouter if enabled (after HSTime)
+HSPR_PID=""
+if [ "$ENABLE_HS_PACKET_ROUTER" = "true" ]; then
+    log_info "=========================================="
+    log_info "Starte Packetrouter (HS-PacketRouter)..."
+    log_info "=========================================="
+    
+    # Check if HSpr binary exists
+    if [ ! -f /usr/bin/HSpr ]; then
+        log_error "FEHLER: /usr/bin/HSpr nicht gefunden!"
+    else
+        log_info "Prüfe Binary /usr/bin/HSpr..."
+        log_info "Datei existiert: $(test -f /usr/bin/HSpr && echo 'JA' || echo 'NEIN')"
+        log_info "Ausführbar: $(test -x /usr/bin/HSpr && echo 'JA' || echo 'NEIN')"
+        
+        # Start HSpr in background and redirect output to log file
+        log_info "Starte HSpr im Hintergrund..."
+        /usr/bin/HSpr > /tmp/HSpr.log 2>&1 &
+        HSPR_PID=$!
+        
+        # Start log forwarder for HSpr
+        (
+            tail -f /tmp/HSpr.log 2>/dev/null | while IFS= read -r line || [ -n "$line" ]; do
+                log_info "[HSpr] $line"
+            done
+        ) &
+        
+        if [ -n "$HSPR_PID" ] && kill -0 "$HSPR_PID" 2>/dev/null; then
+            log_info "HSpr gestartet (PID: $HSPR_PID)"
+        else
+            log_error "FEHLER: HSpr konnte nicht gestartet werden!"
+            HSPR_PID=""
+        fi
+    fi
+else
+    log_info "Packetrouter (HS-PacketRouter) ist deaktiviert"
+fi
+
+# Monitor all processes
 log_info "=========================================="
 log_info "Services laufen, überwache Prozesse..."
 log_info "=========================================="
@@ -644,6 +683,10 @@ check_processes() {
     fi
     if [ -n "$HSTIME_PID" ] && ! kill -0 "$HSTIME_PID" 2>/dev/null; then
         log_error "HSTime Prozess (PID: $HSTIME_PID) ist beendet!"
+        return 1
+    fi
+    if [ -n "$HSPR_PID" ] && ! kill -0 "$HSPR_PID" 2>/dev/null; then
+        log_error "HSpr Prozess (PID: $HSPR_PID) ist beendet!"
         return 1
     fi
     return 0
