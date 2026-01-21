@@ -19,7 +19,7 @@ privileged:
   - SYS_RAWIO
   - NET_ADMIN
 options:
-  loglevel: "0 - Only Errors"
+  loglevel: 0
   port: 3478
   comport: "/dev/ttyUSB0"
   noPasswords: true
@@ -27,7 +27,7 @@ options:
   passwords: []
   enableHSTime: false
 schema:
-  loglevel: list(0 - Only Errors|9 - Errors and Buspackets|10 - All)?
+  loglevel: int(0,10)
   port: port
   comport: str
   noPasswords: bool

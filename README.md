@@ -39,7 +39,7 @@ Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittst
 
 | Option | Beschreibung | Standard |
 |--------|-------------|----------|
-| `loglevel` | Log-Level: Only Errors / Errors and Buspackets / All | `0 - Only Errors` |
+| `loglevel` | Log-Level (0-10): 0 = Only Errors, 9 = Errors and Buspackets, 10 = All | `0` |
 | `port` | TCP/IP Port | `3478` |
 | `comport` | Serieller Port | `/dev/ttyUSB0` |
 | `noPasswords` | Passwort-Logging deaktivieren | `true` |
@@ -47,7 +47,7 @@ Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittst
 | `passwords` | Liste von codierten Passwörtern | `[]` |
 | `enableHSTime` | Zeitmodul (HS-Time) aktivieren | `false` |
 
-> ⚠️ **Wichtig:** Der `loglevel` sollte im Normalbetrieb auf **"0 - Only Errors"** stehen. Höhere Log-Level erzeugen große Mengen an Protokolldaten, die den Speicher füllen und den Systembetrieb beeinträchtigen können. Verwenden Sie höhere Log-Level nur zur Fehlerdiagnose und setzen Sie den Wert danach zurück.
+> ⚠️ **Wichtig:** Der `loglevel` sollte im Normalbetrieb auf **0** (Only Errors) stehen. Höhere Log-Level erzeugen große Mengen an Protokolldaten, die den Speicher füllen und den Systembetrieb beeinträchtigen können. Verwenden Sie höhere Log-Level nur zur Fehlerdiagnose und setzen Sie den Wert danach zurück.
 
 ### 💡 Tipp: Serielle Schnittstellen finden
 
