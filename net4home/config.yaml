@@ -32,5 +32,5 @@ schema:
   comport: str
   noPasswords: bool
   ipv6: bool
-  passwords: password
+  passwords: [str]
   enableHSTime: bool
