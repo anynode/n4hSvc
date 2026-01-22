@@ -592,9 +592,13 @@ if [ "$ENABLE_HSTIME" = "true" ]; then
         log_info "Datei existiert: $(test -f /usr/bin/HSTime && echo 'JA' || echo 'NEIN')"
         log_info "Ausführbar: $(test -x /usr/bin/HSTime && echo 'JA' || echo 'NEIN')"
         
-        # Start HSTime in background and redirect output to log file
-        log_info "Starte HSTime im Hintergrund..."
-        /usr/bin/HSTime > /tmp/HSTime.log 2>&1 &
+        # Create persistent directory for HSTime configuration
+        mkdir -p /data/hstime
+        log_info "Persistentes Verzeichnis für HSTime erstellt: /data/hstime"
+        
+        # Start HSTime in background from persistent directory and redirect output to log file
+        log_info "Starte HSTime im Hintergrund (Arbeitsverzeichnis: /data/hstime)..."
+        cd /data/hstime && /usr/bin/HSTime > /tmp/HSTime.log 2>&1 &
         HSTIME_PID=$!
         
         # Start log forwarder for HSTime
@@ -630,9 +634,13 @@ if [ "$ENABLE_HS_PACKET_ROUTER" = "true" ]; then
         log_info "Datei existiert: $(test -f /usr/bin/HSpr && echo 'JA' || echo 'NEIN')"
         log_info "Ausführbar: $(test -x /usr/bin/HSpr && echo 'JA' || echo 'NEIN')"
         
-        # Start HSpr in background and redirect output to log file
-        log_info "Starte HSpr im Hintergrund..."
-        /usr/bin/HSpr > /tmp/HSpr.log 2>&1 &
+        # Create persistent directory for HSpr configuration
+        mkdir -p /data/hspr
+        log_info "Persistentes Verzeichnis für HSpr erstellt: /data/hspr"
+        
+        # Start HSpr in background from persistent directory and redirect output to log file
+        log_info "Starte HSpr im Hintergrund (Arbeitsverzeichnis: /data/hspr)..."
+        cd /data/hspr && /usr/bin/HSpr > /tmp/HSpr.log 2>&1 &
         HSPR_PID=$!
         
         # Start log forwarder for HSpr

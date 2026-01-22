@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.12] - 2026-01-22
+
+### Added
+
+### Changed
+- HSTime und HSpr verwenden jetzt persistente Verzeichnisse (`/data/hstime` und `/data/hspr`) für ihre Konfigurationsdateien
+- Konfigurationsdateien bleiben bei Neustarts und Updates erhalten
+
+### Fixed
+
 ## [1.3.11] - 2026-01-22
 
 ### Added
