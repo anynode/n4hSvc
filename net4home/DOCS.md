@@ -43,7 +43,7 @@ Aktiviert die Unterstützung für IPv6.
 
 **Standardwert**: Deaktiviert (false)
 
-### Zeitmodul (HS-Time) aktivieren (enableHSTime)
+### Zeitmodul (HS-Time) aktivieren
 
 Installiert und startet den HSTime Service. HSTime startet automatisch nach n4hSvc wenn aktiviert.
 
@@ -54,7 +54,7 @@ Installiert und startet den HSTime Service. HSTime startet automatisch nach n4hS
 - Die Konfigurationsdateien bleiben bei Neustarts und Updates erhalten
 - Alle Ausgaben von HSTime werden im Protokoll angezeigt
 
-### Packetrouter (HS-PacketRouter) aktivieren (enableHSPacketRouter)
+### Packetrouter (HS-PacketRouter) aktivieren
 
 Installiert und startet den HS-PacketRouter Service. HSpr startet automatisch nach HSTime wenn aktiviert.
 
@@ -108,7 +108,7 @@ Für weitere Informationen zum net4home System besuchen Sie die offizielle Dokum
 
 ## Version
 
-**Version**: 1.3.13
+**Version**: 1.4.0
 
 ## Lizenz
 
