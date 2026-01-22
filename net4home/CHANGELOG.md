@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.13] - 2026-01-22
+
+### Added
+
+### Changed
+- HSTime und HSpr arbeiten jetzt direkt im /data Verzeichnis (ohne Unterverzeichnisse)
+
+### Fixed
+
 ## [1.3.12] - 2026-01-22
 
 ### Added
