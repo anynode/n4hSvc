@@ -594,7 +594,7 @@ if [ "$ENABLE_HSTIME" = "true" ]; then
         
         # Start HSTime in background from persistent directory and redirect output to log file
         log_info "Starte HSTime im Hintergrund (Arbeitsverzeichnis: /data)..."
-        cd /data && /usr/bin/HSTime > /tmp/HSTime.log 2>&1 &
+        cd /data && /usr/bin/HSTime > /tmp/HSTime.log 2>&1 </dev/null &
         HSTIME_PID=$!
         
         # Start log forwarder for HSTime
@@ -632,7 +632,7 @@ if [ "$ENABLE_HS_PACKET_ROUTER" = "true" ]; then
         
         # Start HSpr in background from persistent directory and redirect output to log file
         log_info "Starte HSpr im Hintergrund (Arbeitsverzeichnis: /data)..."
-        cd /data && /usr/bin/HSpr > /tmp/HSpr.log 2>&1 &
+        cd /data && /usr/bin/HSpr > /tmp/HSpr.log 2>&1 </dev/null &
         HSPR_PID=$!
         
         # Start log forwarder for HSpr

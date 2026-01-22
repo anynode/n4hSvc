@@ -6,6 +6,7 @@
 
 ### Changed
 - HSTime und HSpr arbeiten jetzt direkt im /data Verzeichnis (ohne Unterverzeichnisse)
+- Console-Ausgaben von HSTime und HSpr werden unterdrückt (stdin geschlossen)
 
 ### Fixed
 
