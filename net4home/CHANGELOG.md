@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.1] - 2026-01-22
+
+### Added
+
+### Changed
+- HSTime und HSpr Ausgaben werden jetzt komplett unterdrückt (keine Log-Weiterleitung mehr)
+
+### Fixed
+
 ## [1.4.0] - 2026-01-22
 
 ### Added

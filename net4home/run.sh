@@ -592,17 +592,10 @@ if [ "$ENABLE_HSTIME" = "true" ]; then
         log_info "Datei existiert: $(test -f /usr/bin/HSTime && echo 'JA' || echo 'NEIN')"
         log_info "Ausführbar: $(test -x /usr/bin/HSTime && echo 'JA' || echo 'NEIN')"
         
-        # Start HSTime in background from persistent directory and redirect output to log file
+        # Start HSTime in background from persistent directory and suppress all output
         log_info "Starte HSTime im Hintergrund (Arbeitsverzeichnis: /data)..."
-        cd /data && /usr/bin/HSTime > /tmp/HSTime.log 2>&1 </dev/null &
+        cd /data && /usr/bin/HSTime > /dev/null 2>&1 </dev/null &
         HSTIME_PID=$!
-        
-        # Start log forwarder for HSTime
-        (
-            tail -f /tmp/HSTime.log 2>/dev/null | while IFS= read -r line || [ -n "$line" ]; do
-                log_info "[HSTime] $line"
-            done
-        ) &
         
         if [ -n "$HSTIME_PID" ] && kill -0 "$HSTIME_PID" 2>/dev/null; then
             log_info "HSTime gestartet (PID: $HSTIME_PID)"
@@ -630,17 +623,10 @@ if [ "$ENABLE_HS_PACKET_ROUTER" = "true" ]; then
         log_info "Datei existiert: $(test -f /usr/bin/HSpr && echo 'JA' || echo 'NEIN')"
         log_info "Ausführbar: $(test -x /usr/bin/HSpr && echo 'JA' || echo 'NEIN')"
         
-        # Start HSpr in background from persistent directory and redirect output to log file
+        # Start HSpr in background from persistent directory and suppress all output
         log_info "Starte HSpr im Hintergrund (Arbeitsverzeichnis: /data)..."
-        cd /data && /usr/bin/HSpr > /tmp/HSpr.log 2>&1 </dev/null &
+        cd /data && /usr/bin/HSpr > /dev/null 2>&1 </dev/null &
         HSPR_PID=$!
-        
-        # Start log forwarder for HSpr
-        (
-            tail -f /tmp/HSpr.log 2>/dev/null | while IFS= read -r line || [ -n "$line" ]; do
-                log_info "[HSpr] $line"
-            done
-        ) &
         
         if [ -n "$HSPR_PID" ] && kill -0 "$HSPR_PID" 2>/dev/null; then
             log_info "HSpr gestartet (PID: $HSPR_PID)"
