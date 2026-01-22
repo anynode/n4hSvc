@@ -43,6 +43,28 @@ Aktiviert die Unterstützung für IPv6.
 
 **Standardwert**: Deaktiviert (false)
 
+### Zeitmodul (HS-Time) aktivieren (enableHSTime)
+
+Installiert und startet den HSTime Service. HSTime startet automatisch nach n4hSvc wenn aktiviert.
+
+**Standardwert**: Deaktiviert (false)
+
+**Hinweis**: 
+- HSTime erstellt seine Konfigurationsdateien im persistenten `/data` Verzeichnis
+- Die Konfigurationsdateien bleiben bei Neustarts und Updates erhalten
+- Alle Ausgaben von HSTime werden im Protokoll angezeigt
+
+### Packetrouter (HS-PacketRouter) aktivieren (enableHSPacketRouter)
+
+Installiert und startet den HS-PacketRouter Service. HSpr startet automatisch nach HSTime wenn aktiviert.
+
+**Standardwert**: Deaktiviert (false)
+
+**Hinweis**: 
+- HSpr erstellt seine Konfigurationsdateien im persistenten `/data` Verzeichnis
+- Die Konfigurationsdateien bleiben bei Neustarts und Updates erhalten
+- Alle Ausgaben von HSpr werden im Protokoll angezeigt
+
 ## Installation
 
 1. Kopieren Sie dieses Add-on in Ihr Home Assistant Add-ons Verzeichnis
@@ -82,10 +104,12 @@ Die Protokolle des Add-ons können im **Protokoll** Tab eingesehen werden. Die A
 
 Für weitere Informationen zum net4home System besuchen Sie die offizielle Dokumentation.
 
+**GitHub Repository**: [https://github.com/anynode/n4hSvc](https://github.com/anynode/n4hSvc)
+
 ## Version
 
-**Version**: 1.0.0
+**Version**: 1.3.13
 
 ## Lizenz
 
-(c) kk, 2011
+(c) net4home GmbH, 2026

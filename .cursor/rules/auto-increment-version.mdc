@@ -8,7 +8,7 @@ alwaysApply: true
 
 ## Regel
 
-**Vor jedem Git-Commit** muss die Patch-Version in `net4home/config.yaml` automatisch um 1 erhöht werden **und** das CHANGELOG.md muss aktualisiert werden.
+**Vor jedem Git-Commit** muss die Patch-Version in `net4home/config.yaml` automatisch um 1 erhöht werden **und** das CHANGELOG.md **sowie** die DOCS.md müssen aktualisiert werden.
 
 ## Implementierung
 
@@ -22,7 +22,10 @@ alwaysApply: true
    - Format: `## [X.Y.Z] - YYYY-MM-DD`
    - Aktuelles Datum verwenden
    - Leere Sektionen für `### Added`, `### Changed`, `### Fixed` hinzufügen (falls nicht vorhanden)
-5. **Commit**: Die geänderten `config.yaml` und `CHANGELOG.md` müssen Teil des Commits sein
+5. **DOCS.md aktualisieren**: 
+   - Die Versionsnummer in der Sektion "Version" aktualisieren (Format: `**Version**: X.Y.Z`)
+   - Die Versionsnummer befindet sich am Ende der Datei in der Sektion "Version"
+6. **Commit**: Die geänderten `config.yaml`, `CHANGELOG.md` und `DOCS.md` müssen Teil des Commits sein
 
 **Wichtig**: Dies muss **automatisch** geschehen, wenn der Benutzer "commit" sagt oder einen Commit durchführt. Der AI-Agent soll nicht fragen, sondern die Version automatisch erhöhen und das CHANGELOG aktualisieren.
 
@@ -59,6 +62,7 @@ version: "1.3.4"
 - **Nur Patch-Version**: Nur die letzte Zahl (Patch-Version) wird erhöht, Major (X) und Minor (Y) bleiben unverändert
 - **Automatisch**: Diese Regel sollte automatisch angewendet werden, ohne dass der Benutzer explizit danach fragen muss
 - **CHANGELOG-Format**: Neue Version-Sektion muss direkt nach `# Changelog` eingefügt werden, vor der bisherigen neuesten Version
+- **DOCS.md-Format**: Die Versionsnummer in der Sektion "Version" am Ende der Datei muss aktualisiert werden
 - **Datum**: Aktuelles Datum im Format `YYYY-MM-DD` verwenden
 
 ## Implementierungs-Beispiel
@@ -94,6 +98,12 @@ Set-Content -Path net4home\config.yaml -Value $content -NoNewline
 - Beispiel mit search_replace:
   - `old_string`: `# Changelog\n\n## [1.3.3] - 2026-01-21`
   - `new_string`: `# Changelog\n\n## [1.3.4] - 2026-01-21\n\n### Added\n\n### Changed\n\n### Fixed\n\n## [1.3.3] - 2026-01-21`
+
+**DOCS.md aktualisieren:**
+- Die Versionsnummer in der Sektion "Version" am Ende der Datei aktualisieren
+- Beispiel mit search_replace:
+  - `old_string`: `**Version**: 1.3.3`
+  - `new_string`: `**Version**: 1.3.4`
 
 ## Ausnahmen
 
