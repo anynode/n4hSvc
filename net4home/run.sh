@@ -25,17 +25,12 @@ LOG_LEVEL=$(bashio::config 'loglevel')
 log_info "Log Level: $LOG_LEVEL"
 PORT=$(bashio::config 'port')
 COMPORT=$(bashio::config 'comport')
-NO_PASSWORDS=$(bashio::config 'noPasswords')
 IPV6=$(bashio::config 'ipv6')
 ENABLE_HSTIME=$(bashio::config 'enableHSTime')
 ENABLE_HS_PACKET_ROUTER=$(bashio::config 'enableHSPacketRouter')
 
-# Convert noPasswords boolean to int
-if [ "$NO_PASSWORDS" = "true" ]; then
-    NO_PASSWORDS_INT=1
-else
-    NO_PASSWORDS_INT=0
-fi
+# noPasswords is always set to 1 (password logging disabled)
+NO_PASSWORDS_INT=1
 
 # Convert ipv6 boolean to int (inverted: switch ON = ipv6 enabled)
 if [ "$IPV6" = "true" ]; then
@@ -51,16 +46,8 @@ log_info "Konfigurationsverzeichnis erstellt: /data"
 # Generate n4hSvc.cfg from Home Assistant config
 log_info "Generiere n4hSvc.cfg Konfigurationsdatei..."
 
-# Build password list string from JSON array
-# Read passwords from options.json and parse with jq (available in HA add-ons)
+# Passwords list is always empty (no password configuration)
 PASSWORD_LIST=""
-if [ -f /data/options.json ]; then
-    PASSWORD_COUNT=$(jq -r '.passwords | length' /data/options.json 2>/dev/null || echo "0")
-    if [ "$PASSWORD_COUNT" -gt 0 ] && [ "$PASSWORD_COUNT" != "null" ]; then
-        # Use jq to extract passwords and format them
-        PASSWORD_LIST=$(jq -r '.passwords[] | "\"" + . + "\""' /data/options.json 2>/dev/null | tr '\n' ',' | sed 's/,$//')
-    fi
-fi
 
 # Write config file
 cat > /data/n4hSvc.cfg <<EOF
@@ -72,7 +59,7 @@ params = {
     loglevel = ${LOG_LEVEL};
     port = ${PORT};
     comport = "${COMPORT}";
-    noPasswords = ${NO_PASSWORDS_INT};
+    noPasswords = 1;
     ipv6 = ${IPV6_INT};
 };
 
@@ -80,7 +67,7 @@ params = {
 # Nur 32 Zeichen hex je Passwort!
 
 passwords = {
-    list = [${PASSWORD_LIST}];
+    list = [];
 };
 EOF
 
@@ -90,13 +77,9 @@ log_info "Aktuelle Konfiguration:"
 log_info "  Log Level: ${LOG_LEVEL}"
 log_info "  Port: ${PORT}"
 log_info "  Serial Port: ${COMPORT}"
-log_info "  No Passwords: ${NO_PASSWORDS_INT}"
+log_info "  No Passwords: 1 (immer aktiviert)"
 log_info "  IPv6: ${IPV6_INT}"
-if [ -n "$PASSWORD_LIST" ]; then
-    log_info "  Passwords: ${PASSWORD_COUNT} konfiguriert"
-else
-    log_info "  Passwords: keine"
-fi
+log_info "  Passwords: keine (nicht konfigurierbar)"
 log_info "=========================================="
 
 # Display the generated config file in the log

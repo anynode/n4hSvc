@@ -42,9 +42,7 @@ Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittst
 | `loglevel` | Log-Level (0-10): 0 = Only Errors, 9 = Errors and Buspackets, 10 = All | `0` |
 | `port` | TCP/IP Port | `3478` |
 | `comport` | Serieller Port | `/dev/ttyUSB0` |
-| `noPasswords` | Passwort-Logging deaktivieren | `true` |
 | `ipv6` | IPv6 aktivieren | `false` |
-| `passwords` | Liste von codierten Passwörtern | `[]` |
 | `enableHSTime` | Zeitmodul (HS-Time) aktivieren | `false` |
 | `enableHSPacketRouter` | Packetrouter (HS-PacketRouter) aktivieren | `false` |
 

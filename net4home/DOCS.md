@@ -10,7 +10,6 @@ Dieses Add-on stellt den **net4home Server (n4hSvc)** als Home Assistant Add-on 
 - TCP/IP Server für den Zugriff auf net4home Geräte
 - Konfigurierbare Logging-Ebenen
 - Unterstützung für IPv4 und IPv6
-- Passwort-Verwaltung für sichere Kommunikation
 
 ## Konfiguration
 
@@ -20,7 +19,7 @@ Steuert die Ausführlichkeit der Protokollierung:
 
 - **0 - Only Errors**: Normal, nur Fehler werden protokolliert (empfohlen für Produktion)
 - **9 - Errors and Buspackets**: Zusätzlich Buspakete werden protokolliert (Debug)
-- **10 - All**: Alle Informationen inkl. Passwörter werden protokolliert (Achtung: Sicherheitsrisiko!)
+- **10 - All**: Alle Informationen werden protokolliert
 
 **Standardwert**: 0 - Only Errors
 
@@ -38,29 +37,11 @@ Das serielle Gerät, über das die Kommunikation mit den net4home Geräten erfol
 
 **Hinweis**: Stellen Sie sicher, dass das serielle Gerät im Container verfügbar ist. Möglicherweise müssen Sie das Gerät im Add-on konfigurieren.
 
-### No Passwords (noPasswords)
-
-Wenn aktiviert, werden Passwörter nicht in den Logs protokolliert (Sicherheitsfeature).
-
-**Standardwert**: Aktiviert (true)
-
 ### IPv6 (ipv6)
 
 Aktiviert die Unterstützung für IPv6.
 
 **Standardwert**: Deaktiviert (false)
-
-### Passwords (passwords)
-
-Liste von codierten Passwörtern im Hex-Format. Jedes Passwort muss genau 32 Hex-Zeichen lang sein.
-
-**Format**: Array von Hex-Strings (z.B. `["E4AABA1FE046D58ECC715B928D5D93BC"]`)
-
-**Standardwert**: Leere Liste
-
-**Wichtig**: 
-- Passwörter müssen bereits codiert sein, bevor sie hier eingetragen werden
-- Nur 32 Zeichen hex je Passwort!
 
 ## Installation
 

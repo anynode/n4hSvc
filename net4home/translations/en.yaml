@@ -8,18 +8,12 @@ configuration:
   comport:
     name: "Serial Port"
     description: "The serial device used for communication with net4home devices"
-  noPasswords:
-    name: "Disable Password Logging"
-    description: "If enabled, passwords will not be logged (security feature)"
   ipv6:
     name: "Enable IPv6"
     description: "Enables IPv6 support"
-  passwords:
-    name: "Passwords"
-    description: "List of encoded passwords in hex format (each password must be exactly 32 hex characters long)"
   enableHSTime:
     name: "Enable Time Module (HS-Time)"
-    description: "Installs and starts the HSTime service. HSTime starts automatically after n4hSvc."
+    description: "Installs and starts the Time service. The service starts automatically after the bus connector."
   enableHSPacketRouter:
     name: "Enable Packet Router (HS-PacketRouter)"
-    description: "Installs and starts the HS-PacketRouter service. HSpr starts automatically after HSTime."
+    description: "Installs and starts the PacketRouter service. The service starts automatically after the bus connector."
