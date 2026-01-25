@@ -108,7 +108,7 @@ Für weitere Informationen zum net4home System besuchen Sie die offizielle Dokum
 
 ## Version
 
-**Version**: 1.0.1
+**Version**: 1.0.2
 
 ## Lizenz
 
