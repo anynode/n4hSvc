@@ -1,6 +1,6 @@
 name: "net4home Server"
 description: "Add-on für das net4home Bussystem - Das Add-on stellt die Verbindung zu dem net4home Bussystem über die serielle Schnittstelle her. net4home Clients können sich dann per IP-Verbindung dann mit dem Bus verbinden."
-version: "1.0.0"
+version: "1.0.1"
 slug: "net4home"
 init: false
 host_network: true

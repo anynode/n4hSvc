@@ -9,20 +9,22 @@ Dieses Add-on stellt den **net4home Server** für Home Assistant bereit. Es ist 
 
 ### [net4home Server](./net4home)
 
-Der net4home Server ist eine **Alternative zum bestehenden net4home HS-Gateway oder PC**. Anstatt ein separates HS-Gateway zu verwenden, können Sie mit diesem Add-on Ihren Home Assistant direkt als Bus-Connector nutzen. Damit besteht die Möglichkeit alle Komponenten zur Steuerung per Browser oder Mobilgerät auf einer Hardware zu kombinieren.
+Der net4home Server ist eine **Alternative zum bestehenden net4home HS-Gateway oder PC mit serieller Schnittstelle**. Anstatt ein separates HS-Gateway zu verwenden, kann mit diesem Add-on der Home Assistant direkt als Bus-Connector genutzt werden. Damit besteht die Möglichkeit alle Komponenten zur Steuerung per Browser oder Mobilgerät auf einer Hardware zu kombinieren. Der Busconnector kann lokal vom Home Assistant genutzt werden und stellt auch eine IP-Server für die Konfiguration von einem Windows PC bereit.
+
+Zusätzlich besteht die Option ein HS-Time und einen HS-Packetrouter als Softwaremodul zu starten. Diese Module verhalten sich genau wie Hardware Module und können zur Synchronisation der Zeit mit anderen Modulen wie HS-Jal oder HS-Safety verwendet werden.
+
 Benötigt wird ein UP-PC-Connect Adapter und ein USB-Seriell Adapter, wenn das Add-on auf einem Home Assistant Green oder einem Raspberry Pi betrieben wird.
 
 **Vorteile:**
 - Kein zusätzliches HS-Gateway erforderlich
+- Stellt einen IP-Server für die Konfiguration bereit
 - Direkter Anschluss über USB-Seriell-Adapter
 - Läuft als Home Assistant Add-on
-
+- Optional HS-Time und HS-Packetrouter als Softwaremodul
 
 ## Installation
 
 [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fanynode%2Fn4hSvc)
-
-> ⚠️ **Wichtig - Architektur-Anforderung:** Die Binaries sind für **aarch64 (Raspberry Pi 64-bit / Debian 12)** kompiliert. Das Add-on funktioniert optimal auf Home Assistant Systemen mit aarch64 Architektur (z.B. Raspberry Pi 4/5, Home Assistant Green/Yellow). Auf anderen Architekturen (amd64, armv7, armhf) wird das Add-on zwar installiert, startet aber möglicherweise nicht.
 
 1. **Klicken Sie auf den Button** oder fügen Sie dieses Repository manuell hinzu:
    - Gehen Sie zu **Einstellungen** → **Add-ons** → **Add-on Store**
