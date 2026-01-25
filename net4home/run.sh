@@ -73,25 +73,18 @@ EOF
 
 log_info "Konfigurationsdatei geschrieben: /data/n4hSvc.cfg"
 log_info "=========================================="
-log_info "Aktuelle Konfiguration:"
-log_info "  Log Level: ${LOG_LEVEL}"
-log_info "  Port: ${PORT}"
-log_info "  Serial Port: ${COMPORT}"
-log_info "  No Passwords: 1 (immer aktiviert)"
-log_info "  IPv6: ${IPV6_INT}"
-log_info "  Passwords: keine (nicht konfigurierbar)"
+log_info "Log Level: ${LOG_LEVEL}"
+log_info "Port: ${PORT}"
+log_info "Serial Port: ${COMPORT}"
+log_info "IPv6: ${IPV6_INT}"
 log_info "=========================================="
 
 # Display the generated config file in the log
-log_info "Generierte Konfigurationsdatei (/data/n4hSvc.cfg):"
-log_info "----------------------------------------"
 cat /data/n4hSvc.cfg | while IFS= read -r line || [ -n "$line" ]; do
     log_info "  $line"
 done
-log_info "----------------------------------------"
 
 log_info "Starte net4home Server..."
-log_info "Service wird gestartet, alle Ausgaben erscheinen im Protokoll..."
 log_info "=========================================="
 
 # Start the service and ensure all output goes to stdout/stderr (appears in Protokoll)

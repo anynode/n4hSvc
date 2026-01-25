@@ -1,33 +1,30 @@
 # net4home Server - Home Assistant Add-on
 
-[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fanynode%2Fn4hSvc)
+<img src="https://raw.githubusercontent.com/anynode/n4hSvc/main/net4home/logo.png" alt="net4home Logo" width="250">
+
 
 ## Über dieses Projekt
 
-Dieses Add-on stellt den **net4home Server** für Home Assistant bereit. Es ist der Server für die [net4home Home Assistant Integration](https://github.com/anynode/net4home).
+Dieses Add-on stellt den **net4home Server** für Home Assistant bereit. Es ist ein alternativer Server für die [net4home Home Assistant Integration](https://github.com/anynode/net4home).
 
-### Alternative zum HS-Gateway
+### [net4home Server](./net4home)
 
-Der net4home Server ist eine **Alternative zum bestehenden net4home HS-Gateway**. Anstatt ein separates HS-Gateway zu verwenden, können Sie mit diesem Add-on Ihren Home Assistant direkt als Bus-Connector nutzen.
+Der net4home Server ist eine **Alternative zum bestehenden net4home HS-Gateway oder PC**. Anstatt ein separates HS-Gateway zu verwenden, können Sie mit diesem Add-on Ihren Home Assistant direkt als Bus-Connector nutzen. Damit besteht die Möglichkeit alle Komponenten zur Steuerung per Browser oder Mobilgerät auf einer Hardware zu kombinieren.
+Benötigt wird ein UP-PC-Connect Adapter und ein USB-Seriell Adapter, wenn das Add-on auf einem Home Assistant Green oder einem Raspberry Pi betrieben wird.
 
 **Vorteile:**
 - Kein zusätzliches HS-Gateway erforderlich
 - Direkter Anschluss über USB-Seriell-Adapter
 - Läuft als Home Assistant Add-on
 
-## Add-ons
-
-This repository contains the following add-ons:
-
-### [net4home Server](./net4home)
-
-Ein Server für die Kommunikation mit net4home Geräten über serielle Schnittstelle. Benötigt wird ein UP-PC-Connect Adapter und ein USB-Seriell Adapter, wenn das Add-on auf einem Home Assistant Green oder einem Raspberry Pi betrieben wird.
-
-
 
 ## Installation
 
-1. Klicken Sie auf den Button oben oder fügen Sie dieses Repository manuell hinzu:
+[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fanynode%2Fn4hSvc)
+
+> ⚠️ **Wichtig - Architektur-Anforderung:** Die Binaries sind für **aarch64 (Raspberry Pi 64-bit / Debian 12)** kompiliert. Das Add-on funktioniert optimal auf Home Assistant Systemen mit aarch64 Architektur (z.B. Raspberry Pi 4/5, Home Assistant Green/Yellow). Auf anderen Architekturen (amd64, armv7, armhf) wird das Add-on zwar installiert, startet aber möglicherweise nicht.
+
+1. **Klicken Sie auf den Button** oder fügen Sie dieses Repository manuell hinzu:
    - Gehen Sie zu **Einstellungen** → **Add-ons** → **Add-on Store**
    - Klicken Sie auf die drei Punkte (⋮) oben rechts → **Repositories**
    - Fügen Sie diese URL hinzu: `https://github.com/anynode/n4hSvc`
@@ -65,3 +62,7 @@ Gehen Sie zu **Add-on → Protokoll**, um die Liste der erkannten Schnittstellen
 ## Support
 
 Bei Fragen oder Problemen erstellen Sie bitte ein [Issue](https://github.com/anynode/n4hSvc/issues).
+
+## Lizenz
+
+(c) 2026 net4home GmbH, Wolfsburg
