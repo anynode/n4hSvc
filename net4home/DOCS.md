@@ -4,10 +4,13 @@
 
 Dieses Add-on stellt den **net4home Server (n4hSvc)** als Home Assistant Add-on zur Verfügung. Der net4home Server ermöglicht die Kommunikation mit net4home Geräten über eine serielle Schnittstelle.
 
+Zusätzlich besteht die Option ein HS-Time und einen HS-Packetrouter als Softwaremodul zu starten. Diese Module verhalten sich genau wie Hardware Module und können zur Synchronisation der Zeit mit anderen Modulen wie HS-Jal oder HS-Safety verwendet werden.
+
 ## Funktionen
 
 - Kommunikation mit net4home Geräten über serielle Schnittstelle
 - TCP/IP Server für den Zugriff auf net4home Geräte
+- Unterstützung von Auto-Discover im Netzwerk
 - Konfigurierbare Logging-Ebenen
 - Unterstützung für IPv4 und IPv6
 
@@ -45,25 +48,25 @@ Aktiviert die Unterstützung für IPv6.
 
 ### Zeitmodul (HS-Time) aktivieren
 
-Installiert und startet den HSTime Service. HSTime startet automatisch nach n4hSvc wenn aktiviert.
+Installiert und startet den HSTime Service. HS-Time startet automatisch nach n4hSvc wenn aktiviert.
 
 **Standardwert**: Deaktiviert (false)
 
 **Hinweis**: 
-- HSTime erstellt seine Konfigurationsdateien im persistenten `/data` Verzeichnis
+- HS-Time erstellt seine Konfigurationsdateien im persistenten `/data` Verzeichnis
 - Die Konfigurationsdateien bleiben bei Neustarts und Updates erhalten
-- Alle Ausgaben von HSTime werden im Protokoll angezeigt
+- Alle Ausgaben von HS-Time werden im Protokoll angezeigt
 
 ### Packetrouter (HS-PacketRouter) aktivieren
 
-Installiert und startet den HS-PacketRouter Service. HSpr startet automatisch nach HSTime wenn aktiviert.
+Installiert und startet den HS-PacketRouter Service. HS-PacketRouter startet automatisch nach n4hSvc wenn aktiviert.
 
 **Standardwert**: Deaktiviert (false)
 
 **Hinweis**: 
 - HSpr erstellt seine Konfigurationsdateien im persistenten `/data` Verzeichnis
 - Die Konfigurationsdateien bleiben bei Neustarts und Updates erhalten
-- Alle Ausgaben von HSpr werden im Protokoll angezeigt
+- Alle Ausgaben von HS-PacketRouter werden im Protokoll angezeigt
 
 ## Installation
 
@@ -108,7 +111,7 @@ Für weitere Informationen zum net4home System besuchen Sie die offizielle Dokum
 
 ## Version
 
-**Version**: 1.0.2
+**Version**: 1.0.3
 
 ## Lizenz
 

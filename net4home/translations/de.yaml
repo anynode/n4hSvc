@@ -4,10 +4,10 @@ configuration:
     description: "Log-Level (0-10): 0 = Nur Fehler, 9 = Fehler und Buspakete, 10 = Alles"
   port:
     name: "TCP/IP Port"
-    description: "Der TCP/IP Port, auf dem der Server lauscht"
+    description: "Der TCP/IP Port, auf dem der Server auf Verbindungen wartet"
   comport:
     name: "Serieller Port"
-    description: "Das serielle Gerät, über das die Kommunikation mit den net4home Geräten erfolgt"
+    description: "Das serielle Gerät, über das die Kommunikation mit den net4home Bus erfolgt"
   ipv6:
     name: "IPv6 aktivieren"
     description: "Aktiviert die Unterstützung für IPv6"
@@ -17,3 +17,5 @@ configuration:
   enableHSPacketRouter:
     name: "Packetrouter (HS-PacketRouter) aktivieren"
     description: "Installiert und startet den HS-PacketRouter Service. Der Service startet automatisch nach dem Busconnector."
+network:
+  3478/tcp: "TCP/IP Port für net4home Client-Verbindungen"

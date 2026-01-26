@@ -1,22 +1,20 @@
 # Changelog
 
+## [1.0.3] - 2026-01-25
+
+### Changed
+- Optimiert für Home Assistant Add-on Standards
+- Repository-Konfiguration von JSON auf YAML umgestellt
+- Dockerfile Labels aktualisiert (Version und Architektur)
+- Port-Beschreibungen in Translations hinzugefügt
+
+### Added
+- AppArmor-Profil für verbesserte Security
+- Watchdog-Konfiguration für Health-Monitoring
+- Port-Mapping und Port-Beschreibungen in config.yaml
+- URL-Feld in config.yaml für bessere Dokumentation
+
 ## [1.0.2] - 2026-01-25
-
-### Added
-
-### Changed
-
-### Fixed
-
-## [1.0.1] - 2026-01-25
-
-### Added
-
-### Changed
-
-### Fixed
-
-## [1.0.0] - 2026-01-22
 
 ### Added
 - Initial release

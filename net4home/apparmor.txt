@@ -1,0 +1,124 @@
+#include <tunables/global>
+profile net4home flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+  
+  # Capabilities
+  file,
+  signal (send) set=(kill,term,int,hup,cont),
+  
+  # S6-Overlay
+  /init ix,
+  /bin/** ix,
+  /usr/bin/** ix,
+  /run/{s6,s6-rc*,service}/** ix,
+  /package/** ix,
+  /command/** ix,
+  /etc/services.d/** rwix,
+  /etc/cont-init.d/** rwix,
+  /etc/cont-finish.d/** rwix,
+  /run/{,**} rwk,
+  
+  # Serial port access
+  /dev/tty* rw,
+  /dev/ttyUSB* rw,
+  /dev/ttyACM* rw,
+  /dev/ttyAMA* rw,
+  /dev/ttyS* rw,
+  /dev/serial/by-id/** rw,
+  
+  # USB access
+  /dev/bus/usb/** rw,
+  
+  # Bashio
+  /usr/lib/bashio/** ix,
+  /tmp/** rwk,
+  
+  # Access to options.json and other files within your addon
+  /data/** rw,
+  
+  # Network access
+  network,
+  
+  # Start new profile for n4hSvc service
+  /usr/bin/n4hSvc cx -> n4hSvc,
+  profile n4hSvc flags=(attach_disconnected,mediate_deleted) {
+    #include <abstractions/base>
+    
+    # Receive signals from S6-Overlay
+    signal (receive) peer=*_net4home,
+    
+    # Access to options.json and other files within your addon
+    /data/** rw,
+    
+    # Access required for service functionality
+    /usr/bin/n4hSvc r,
+    /bin/bash rix,
+    /bin/sh rix,
+    /bin/echo ix,
+    /etc/passwd r,
+    
+    # Serial port access
+    /dev/tty* rw,
+    /dev/ttyUSB* rw,
+    /dev/ttyACM* rw,
+    /dev/ttyAMA* rw,
+    /dev/ttyS* rw,
+    /dev/serial/by-id/** rw,
+    
+    # USB access
+    /dev/bus/usb/** rw,
+    
+    # Network access
+    network,
+  }
+  
+  # Start new profile for HSTime service (if enabled)
+  /usr/bin/HSTime cx -> HSTime,
+  profile HSTime flags=(attach_disconnected,mediate_deleted) {
+    #include <abstractions/base>
+    
+    # Receive signals from S6-Overlay
+    signal (receive) peer=*_net4home,
+    
+    # Access to options.json and other files within your addon
+    /data/** rw,
+    
+    # Access required for service functionality
+    /usr/bin/HSTime r,
+    /bin/bash rix,
+    /bin/sh rix,
+    /bin/echo ix,
+    /etc/passwd r,
+    
+    # Serial port access (for bus communication)
+    /dev/tty* rw,
+    
+    # Network access
+    network,
+  }
+  
+  # Start new profile for HSpr service (if enabled)
+  /usr/bin/HSpr cx -> HSpr,
+  profile HSpr flags=(attach_disconnected,mediate_deleted) {
+    #include <abstractions/base>
+    
+    # Receive signals from S6-Overlay
+    signal (receive) peer=*_net4home,
+    
+    # Access to options.json and other files within your addon
+    /data/** rw,
+    
+    # Access required for service functionality
+    /usr/bin/HSpr r,
+    /bin/bash rix,
+    /bin/sh rix,
+    /bin/echo ix,
+    /etc/passwd r,
+    
+    # Serial port access (for bus communication)
+    /dev/tty* rw,
+    
+    # Network access
+    network,
+  }
+}
