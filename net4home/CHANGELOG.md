@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.4] - 2026-01-25
+
+### Changed
+- Aktualisierte Binaries für n4hSvc, HSTime und HSpr
+
 ## [1.0.3] - 2026-01-25
 
 ### Changed
