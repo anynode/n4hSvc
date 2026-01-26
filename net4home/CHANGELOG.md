@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.6] - 2026-01-25
+
+### Changed
+- AppArmor temporär deaktiviert zur Fehlerdiagnose des Segmentation Faults
+
 ## [1.0.5] - 2026-01-25
 
 ### Fixed
