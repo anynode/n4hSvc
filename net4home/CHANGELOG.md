@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.5] - 2026-01-25
+
+### Fixed
+- Behebt Segmentation Fault durch Entfernung inkompatibler ports-Konfiguration bei host_network: true
+
 ## [1.0.4] - 2026-01-25
 
 ### Changed
