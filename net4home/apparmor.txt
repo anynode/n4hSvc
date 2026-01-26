@@ -57,6 +57,27 @@ profile net4home flags=(attach_disconnected,mediate_deleted) {
     /bin/echo ix,
     /etc/passwd r,
     
+    # Library access - critical for binary execution
+    /usr/lib/** rm,
+    /lib/** rm,
+    /usr/lib64/** rm,
+    /lib64/** rm,
+    /usr/lib/aarch64-linux-gnu/** rm,
+    /lib/aarch64-linux-gnu/** rm,
+    /usr/lib/arm-linux-gnueabihf/** rm,
+    /lib/arm-linux-gnueabihf/** rm,
+    /usr/lib/x86_64-linux-gnu/** rm,
+    /lib/x86_64-linux-gnu/** rm,
+    
+    # Process and system information
+    /proc/** r,
+    /sys/** r,
+    
+    # Configuration files
+    /etc/** r,
+    /n4hSvc.cfg r,
+    /etc/n4hSvc.cfg r,
+    
     # Serial port access
     /dev/tty* rw,
     /dev/ttyUSB* rw,
@@ -90,6 +111,22 @@ profile net4home flags=(attach_disconnected,mediate_deleted) {
     /bin/echo ix,
     /etc/passwd r,
     
+    # Library access
+    /usr/lib/** rm,
+    /lib/** rm,
+    /usr/lib64/** rm,
+    /lib64/** rm,
+    /usr/lib/aarch64-linux-gnu/** rm,
+    /lib/aarch64-linux-gnu/** rm,
+    
+    # Process and system information
+    /proc/** r,
+    /sys/** r,
+    
+    # Configuration files
+    /etc/** r,
+    /data/** rw,
+    
     # Serial port access (for bus communication)
     /dev/tty* rw,
     
@@ -114,6 +151,22 @@ profile net4home flags=(attach_disconnected,mediate_deleted) {
     /bin/sh rix,
     /bin/echo ix,
     /etc/passwd r,
+    
+    # Library access
+    /usr/lib/** rm,
+    /lib/** rm,
+    /usr/lib64/** rm,
+    /lib64/** rm,
+    /usr/lib/aarch64-linux-gnu/** rm,
+    /lib/aarch64-linux-gnu/** rm,
+    
+    # Process and system information
+    /proc/** r,
+    /sys/** r,
+    
+    # Configuration files
+    /etc/** r,
+    /data/** rw,
     
     # Serial port access (for bus communication)
     /dev/tty* rw,
