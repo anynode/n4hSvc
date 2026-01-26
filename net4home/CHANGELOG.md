@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.9] - 2026-01-26
+
+### Fixed
+- Behebt Problem mit fehlender libconfig.so.9 Bibliothek: Verbesserte Bibliothekssuche und Symlink-Erstellung
+- Bibliothekssuche sucht jetzt nach allen libconfig-Versionen und erstellt Symlinks in allen wichtigen Pfaden
+- Erweiterte LD_LIBRARY_PATH für bessere Bibliothekserkennung
+
 ## [1.0.8] - 2026-01-26
 
 ### Changed

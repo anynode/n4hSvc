@@ -49,15 +49,15 @@ RUN \
              ln -s /lib64/ld-linux-aarch64.so.1 /lib/ld-linux-aarch64.so.1 2>/dev/null || \
              true); \
         fi; \
-        # Create symlinks for libconfig.so.9 in architecture-specific directories
-        LIB_CONFIG_ALPINE=$(find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1); \
+        # Create symlinks for libconfig.so.9 in architecture-specific directories AND common paths
+        LIB_CONFIG_ALPINE=$(find /usr/lib* /lib* -name "libconfig.so*" -type f 2>/dev/null | head -1); \
         if [ -n "$LIB_CONFIG_ALPINE" ]; then \
-            mkdir -p /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu 2>/dev/null || true; \
-            if [ ! -f /usr/lib/aarch64-linux-gnu/libconfig.so.9 ] && [ ! -f /lib/aarch64-linux-gnu/libconfig.so.9 ]; then \
-                ln -sf "$LIB_CONFIG_ALPINE" /usr/lib/aarch64-linux-gnu/libconfig.so.9 2>/dev/null || \
-                ln -sf "$LIB_CONFIG_ALPINE" /lib/aarch64-linux-gnu/libconfig.so.9 2>/dev/null || true; \
-                echo "Created symlink for libconfig.so.9"; \
-            fi; \
+            mkdir -p /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu /usr/lib /lib 2>/dev/null || true; \
+            for target_path in /usr/lib/aarch64-linux-gnu/libconfig.so.9 /lib/aarch64-linux-gnu/libconfig.so.9 /usr/lib/libconfig.so.9 /lib/libconfig.so.9; do \
+                if [ ! -f "$target_path" ] && [ ! -L "$target_path" ]; then \
+                    ln -sf "$LIB_CONFIG_ALPINE" "$target_path" 2>/dev/null && echo "Created symlink: $target_path -> $LIB_CONFIG_ALPINE" || true; \
+                fi; \
+            done; \
         fi; \
         # Create symlinks for libblkid.so.1 in architecture-specific directories
         LIB_BLKID_ALPINE=$(find /usr/lib* /lib* -name "libblkid.so*" 2>/dev/null | head -1); \
@@ -97,13 +97,15 @@ RUN \
                 ln -s "$interp" /lib/ld-linux-aarch64.so.1; \
             done || true; \
         fi; \
-        # Ensure libconfig.so.9 exists (create symlink if needed)
-        if [ ! -f /usr/lib/aarch64-linux-gnu/libconfig.so.9 ] && [ ! -f /lib/aarch64-linux-gnu/libconfig.so.9 ]; then \
-            find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1 | while read lib; do \
-                mkdir -p /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu 2>/dev/null || true; \
-                ln -sf "$lib" /usr/lib/aarch64-linux-gnu/libconfig.so.9 2>/dev/null || \
-                ln -sf "$lib" /lib/aarch64-linux-gnu/libconfig.so.9 2>/dev/null || true; \
-            done || true; \
+        # Ensure libconfig.so.9 exists (create symlink if needed) in ALL important paths
+        LIB_CONFIG_DEBIAN=$(find /usr/lib* /lib* -name "libconfig.so*" -type f 2>/dev/null | head -1); \
+        if [ -n "$LIB_CONFIG_DEBIAN" ]; then \
+            mkdir -p /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu /usr/lib /lib 2>/dev/null || true; \
+            for target_path in /usr/lib/aarch64-linux-gnu/libconfig.so.9 /lib/aarch64-linux-gnu/libconfig.so.9 /usr/lib/libconfig.so.9 /lib/libconfig.so.9; do \
+                if [ ! -f "$target_path" ] && [ ! -L "$target_path" ]; then \
+                    ln -sf "$LIB_CONFIG_DEBIAN" "$target_path" 2>/dev/null && echo "Created symlink: $target_path -> $LIB_CONFIG_DEBIAN" || true; \
+                fi; \
+            done; \
         fi; \
         # Ensure libblkid.so.1 exists (create symlink if needed)
         if [ ! -f /usr/lib/aarch64-linux-gnu/libblkid.so.1 ] && [ ! -f /lib/aarch64-linux-gnu/libblkid.so.1 ]; then \
@@ -138,5 +140,5 @@ LABEL \
     io.hass.name="net4home Server" \
     io.hass.description="Add-on für den net4home Server (n4hSvc)" \
     io.hass.type="addon" \
-    io.hass.version="1.0.6" \
+    io.hass.version="1.0.9" \
     io.hass.arch="aarch64|amd64|armv7|armhf"

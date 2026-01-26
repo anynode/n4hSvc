@@ -198,9 +198,14 @@ for lib_path in $LIB_PATHS; do
     fi
 done
 
-# If not found in expected paths, search system-wide
+# If not found in expected paths, search system-wide for ANY version
 if [ -z "$LIB_CONFIG_FOUND" ]; then
-    LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1) || true
+    # Try to find libconfig.so.9 first
+    LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so.9" 2>/dev/null | head -1) || true
+    # If not found, try any libconfig.so version
+    if [ -z "$LIB_CONFIG_FOUND" ]; then
+        LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so*" -type f 2>/dev/null | head -1) || true
+    fi
 fi
 
 # Check for libblkid.so.1 or libblkid.so in expected paths first
@@ -249,10 +254,22 @@ if [ -z "$LIB_CONFIG_FOUND" ]; then
             log_info "  $line"
         done || true
     fi
-    # Search again after installation
-    LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1) || true
+    # Search again after installation - try libconfig.so.9 first, then any version
+    LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so.9" 2>/dev/null | head -1) || true
+    if [ -z "$LIB_CONFIG_FOUND" ]; then
+        LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so*" -type f 2>/dev/null | head -1) || true
+    fi
     if [ -n "$LIB_CONFIG_FOUND" ]; then
         log_info "libconfig.so nach Installation gefunden: $LIB_CONFIG_FOUND"
+        # Immediately create symlinks after installation
+        log_info "Erstelle Symlinks nach Installation..."
+        for lib_path in /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu /usr/lib /lib; do
+            if [ ! -f "$lib_path/libconfig.so.9" ]; then
+                mkdir -p "$lib_path" 2>/dev/null || true
+                ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null && \
+                    log_info "  Symlink erstellt: $lib_path/libconfig.so.9 -> $LIB_CONFIG_FOUND" || true
+            fi
+        done
     else
         log_error "libconfig.so konnte auch nach Installation nicht gefunden werden!"
         log_error "Verfuegbare libconfig Dateien:"
@@ -265,30 +282,32 @@ else
 fi
 
 if [ -n "$LIB_CONFIG_FOUND" ]; then
-    # Only create symlinks if not already in expected path
-    NEEDS_SYMLINK=true
+    log_info "Erstelle Symlinks fuer libconfig.so.9 in allen wichtigen Pfaden..."
+    # Create symlinks in ALL important paths, not just the first one
     for lib_path in $LIB_PATHS; do
-        if [ -f "$lib_path/libconfig.so.9" ] || [ -f "$lib_path/libconfig.so" ]; then
-            NEEDS_SYMLINK=false
-            log_info "libconfig.so bereits in erwartetem Pfad: $lib_path"
-            break
+        if [ ! -f "$lib_path/libconfig.so.9" ]; then
+            mkdir -p "$lib_path" 2>/dev/null || true
+            if ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null; then
+                log_info "  Symlink erstellt: $lib_path/libconfig.so.9 -> $LIB_CONFIG_FOUND"
+            fi
+        else
+            log_info "  $lib_path/libconfig.so.9 existiert bereits"
         fi
     done
-    
-    if [ "$NEEDS_SYMLINK" = "true" ]; then
-        log_info "Erstelle Symlinks fuer libconfig.so..."
-        for lib_path in $LIB_PATHS; do
-            if [ ! -f "$lib_path/libconfig.so.9" ] && [ ! -f "$lib_path/libconfig.so" ]; then
-                mkdir -p "$lib_path" 2>/dev/null || true
-                if ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null; then
-                    log_info "  Symlink erstellt: $lib_path/libconfig.so.9 -> $LIB_CONFIG_FOUND"
-                    break
-                fi
-            else
-                log_info "  $lib_path/libconfig.so.9 existiert bereits"
-                break
+    # Also create in /usr/lib and /lib directly (most common paths)
+    for lib_path in /usr/lib /lib; do
+        if [ ! -f "$lib_path/libconfig.so.9" ]; then
+            mkdir -p "$lib_path" 2>/dev/null || true
+            if ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null; then
+                log_info "  Symlink erstellt: $lib_path/libconfig.so.9 -> $LIB_CONFIG_FOUND"
             fi
-        done
+        fi
+    done
+    # Verify symlink works
+    if [ -L /usr/lib/libconfig.so.9 ] || [ -L /lib/libconfig.so.9 ] || [ -f /usr/lib/aarch64-linux-gnu/libconfig.so.9 ] || [ -f /lib/aarch64-linux-gnu/libconfig.so.9 ]; then
+        log_info "libconfig.so.9 Symlink erfolgreich erstellt und verifiziert"
+    else
+        log_error "WARNUNG: libconfig.so.9 Symlink konnte nicht verifiziert werden"
     fi
 else
     log_error "Kann keine Symlinks fuer libconfig.so erstellen - Bibliothek nicht gefunden!"
@@ -364,11 +383,20 @@ else
     log_error "Kann keine Symlinks fuer libblkid.so erstellen - Bibliothek nicht gefunden!"
 fi
 
-# Set LD_LIBRARY_PATH to help find libraries
-if [ -z "${LD_LIBRARY_PATH:-}" ]; then
-    export LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu:/lib/aarch64-linux-gnu:/usr/lib:/lib:/usr/lib64:/lib64"
+# Set LD_LIBRARY_PATH to help find libraries (order matters - most specific first)
+export LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu:/lib/aarch64-linux-gnu:/usr/lib/arm-linux-gnueabihf:/lib/arm-linux-gnueabihf:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:/usr/lib:/lib:/usr/lib64:/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+log_info "LD_LIBRARY_PATH gesetzt: $LD_LIBRARY_PATH"
+
+# Verify libraries are accessible before starting
+log_info "Verifiziere Bibliothekszugriff..."
+if [ -f /usr/lib/aarch64-linux-gnu/libconfig.so.9 ] || [ -f /lib/aarch64-linux-gnu/libconfig.so.9 ] || [ -f /usr/lib/libconfig.so.9 ] || [ -f /lib/libconfig.so.9 ]; then
+    log_info "libconfig.so.9 ist erreichbar"
 else
-    export LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu:/lib/aarch64-linux-gnu:/usr/lib:/lib:/usr/lib64:/lib64:${LD_LIBRARY_PATH}"
+    log_error "WARNUNG: libconfig.so.9 nicht in erwarteten Pfaden gefunden!"
+    log_error "Verfuegbare libconfig Dateien:"
+    find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -5 | while IFS= read -r line || [ -n "$line" ]; do
+        log_error "  $line"
+    done
 fi
 
 # Copy config to expected location
