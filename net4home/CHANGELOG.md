@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7] - 2026-01-26
+
+### Changed
+- Optimierte Bibliotheksinstallation: Bibliotheken werden nur noch installiert, wenn sie wirklich fehlen
+- Dockerfile erstellt jetzt Symlinks für libconfig und libblkid auch für Alpine Linux
+- Verbesserte Bibliotheksprüfung in run.sh: Prüft zuerst in erwarteten Pfaden, reduziert Startzeit erheblich
+
 ## [1.0.6] - 2026-01-25
 
 ### Changed

@@ -1,6 +1,6 @@
 name: "net4home Server"
 description: "Add-on für das net4home Bussystem - Das Add-on stellt die Verbindung zu dem net4home Bussystem über die serielle Schnittstelle her. net4home Clients können sich dann per IP-Verbindung dann mit dem Bus verbinden."
-version: "1.0.6"
+version: "1.0.7"
 slug: "net4home"
 url: "https://github.com/anynode/n4hSvc"
 init: false
@@ -19,7 +19,6 @@ privileged:
   - SYS_ADMIN
   - SYS_RAWIO
   - NET_ADMIN
-apparmor: false
 options:
   loglevel: 0
   port: 3478

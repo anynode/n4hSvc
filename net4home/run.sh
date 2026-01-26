@@ -178,8 +178,47 @@ fi
 # Check for required libraries and create symlinks if needed
 # Search in all possible library paths including architecture-specific directories
 log_info "Suche nach benoetigten Bibliotheken..."
-LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1) || true
-LIB_BLKID_FOUND=$(find /usr/lib* /lib* -name "libblkid.so*" 2>/dev/null | head -1) || true
+
+# Common library paths for different architectures (in order of preference)
+LIB_PATHS="/usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu /usr/lib/arm-linux-gnueabihf /lib/arm-linux-gnueabihf /usr/lib/x86_64-linux-gnu /lib/x86_64-linux-gnu /usr/lib /lib /usr/lib64 /lib64"
+
+# First check if libraries are already available in expected paths (with symlinks)
+LIB_CONFIG_FOUND=""
+LIB_BLKID_FOUND=""
+
+# Check for libconfig.so.9 or libconfig.so in expected paths first
+for lib_path in $LIB_PATHS; do
+    if [ -f "$lib_path/libconfig.so.9" ] || [ -f "$lib_path/libconfig.so" ]; then
+        if [ -f "$lib_path/libconfig.so.9" ]; then
+            LIB_CONFIG_FOUND="$lib_path/libconfig.so.9"
+        else
+            LIB_CONFIG_FOUND="$lib_path/libconfig.so"
+        fi
+        break
+    fi
+done
+
+# If not found in expected paths, search system-wide
+if [ -z "$LIB_CONFIG_FOUND" ]; then
+    LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1) || true
+fi
+
+# Check for libblkid.so.1 or libblkid.so in expected paths first
+for lib_path in $LIB_PATHS; do
+    if [ -f "$lib_path/libblkid.so.1" ] || [ -f "$lib_path/libblkid.so" ]; then
+        if [ -f "$lib_path/libblkid.so.1" ]; then
+            LIB_BLKID_FOUND="$lib_path/libblkid.so.1"
+        else
+            LIB_BLKID_FOUND="$lib_path/libblkid.so"
+        fi
+        break
+    fi
+done
+
+# If not found in expected paths, search system-wide
+if [ -z "$LIB_BLKID_FOUND" ]; then
+    LIB_BLKID_FOUND=$(find /usr/lib* /lib* -name "libblkid.so*" 2>/dev/null | head -1) || true
+fi
 
 # Log found libraries
 if [ -n "$LIB_CONFIG_FOUND" ]; then
@@ -193,9 +232,6 @@ if [ -n "$LIB_BLKID_FOUND" ]; then
 else
     log_info "libblkid.so nicht gefunden, suche weiter..."
 fi
-
-# Common library paths for different architectures
-LIB_PATHS="/usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu /usr/lib/arm-linux-gnueabihf /lib/arm-linux-gnueabihf /usr/lib/x86_64-linux-gnu /lib/x86_64-linux-gnu /usr/lib /lib /usr/lib64 /lib64"
 
 if [ -z "$LIB_CONFIG_FOUND" ]; then
     log_error "FEHLT: libconfig.so nicht gefunden! Versuche Installation..."
@@ -213,6 +249,7 @@ if [ -z "$LIB_CONFIG_FOUND" ]; then
             log_info "  $line"
         done || true
     fi
+    # Search again after installation
     LIB_CONFIG_FOUND=$(find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1) || true
     if [ -n "$LIB_CONFIG_FOUND" ]; then
         log_info "libconfig.so nach Installation gefunden: $LIB_CONFIG_FOUND"
@@ -223,22 +260,36 @@ if [ -z "$LIB_CONFIG_FOUND" ]; then
             log_error "  $line"
         done
     fi
+else
+    log_info "libconfig.so bereits vorhanden, keine Installation noetig"
 fi
 
 if [ -n "$LIB_CONFIG_FOUND" ]; then
-    log_info "Erstelle Symlinks fuer libconfig.so..."
+    # Only create symlinks if not already in expected path
+    NEEDS_SYMLINK=true
     for lib_path in $LIB_PATHS; do
-        if [ ! -f "$lib_path/libconfig.so.9" ] && [ ! -f "$lib_path/libconfig.so" ]; then
-            mkdir -p "$lib_path" 2>/dev/null || true
-            if ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null; then
-                log_info "  Symlink erstellt: $lib_path/libconfig.so.9 -> $LIB_CONFIG_FOUND"
-                break
-            fi
-        else
-            log_info "  $lib_path/libconfig.so.9 existiert bereits"
+        if [ -f "$lib_path/libconfig.so.9" ] || [ -f "$lib_path/libconfig.so" ]; then
+            NEEDS_SYMLINK=false
+            log_info "libconfig.so bereits in erwartetem Pfad: $lib_path"
             break
         fi
     done
+    
+    if [ "$NEEDS_SYMLINK" = "true" ]; then
+        log_info "Erstelle Symlinks fuer libconfig.so..."
+        for lib_path in $LIB_PATHS; do
+            if [ ! -f "$lib_path/libconfig.so.9" ] && [ ! -f "$lib_path/libconfig.so" ]; then
+                mkdir -p "$lib_path" 2>/dev/null || true
+                if ln -sf "$LIB_CONFIG_FOUND" "$lib_path/libconfig.so.9" 2>/dev/null; then
+                    log_info "  Symlink erstellt: $lib_path/libconfig.so.9 -> $LIB_CONFIG_FOUND"
+                    break
+                fi
+            else
+                log_info "  $lib_path/libconfig.so.9 existiert bereits"
+                break
+            fi
+        done
+    fi
 else
     log_error "Kann keine Symlinks fuer libconfig.so erstellen - Bibliothek nicht gefunden!"
 fi
@@ -268,6 +319,7 @@ if [ -z "$LIB_BLKID_FOUND" ]; then
             log_info "  $line"
         done || true
     fi
+    # Search again after installation
     LIB_BLKID_FOUND=$(find /usr/lib* /lib* -name "libblkid.so*" 2>/dev/null | head -1) || true
     if [ -n "$LIB_BLKID_FOUND" ]; then
         log_info "libblkid.so nach Installation gefunden: $LIB_BLKID_FOUND"
@@ -278,22 +330,36 @@ if [ -z "$LIB_BLKID_FOUND" ]; then
             log_error "  $line"
         done
     fi
+else
+    log_info "libblkid.so bereits vorhanden, keine Installation noetig"
 fi
 
 if [ -n "$LIB_BLKID_FOUND" ]; then
-    log_info "Erstelle Symlinks fuer libblkid.so..."
+    # Only create symlinks if not already in expected path
+    NEEDS_SYMLINK=true
     for lib_path in $LIB_PATHS; do
-        if [ ! -f "$lib_path/libblkid.so.1" ] && [ ! -f "$lib_path/libblkid.so" ]; then
-            mkdir -p "$lib_path" 2>/dev/null || true
-            if ln -sf "$LIB_BLKID_FOUND" "$lib_path/libblkid.so.1" 2>/dev/null; then
-                log_info "  Symlink erstellt: $lib_path/libblkid.so.1 -> $LIB_BLKID_FOUND"
-                break
-            fi
-        else
-            log_info "  $lib_path/libblkid.so.1 existiert bereits"
+        if [ -f "$lib_path/libblkid.so.1" ] || [ -f "$lib_path/libblkid.so" ]; then
+            NEEDS_SYMLINK=false
+            log_info "libblkid.so bereits in erwartetem Pfad: $lib_path"
             break
         fi
     done
+    
+    if [ "$NEEDS_SYMLINK" = "true" ]; then
+        log_info "Erstelle Symlinks fuer libblkid.so..."
+        for lib_path in $LIB_PATHS; do
+            if [ ! -f "$lib_path/libblkid.so.1" ] && [ ! -f "$lib_path/libblkid.so" ]; then
+                mkdir -p "$lib_path" 2>/dev/null || true
+                if ln -sf "$LIB_BLKID_FOUND" "$lib_path/libblkid.so.1" 2>/dev/null; then
+                    log_info "  Symlink erstellt: $lib_path/libblkid.so.1 -> $LIB_BLKID_FOUND"
+                    break
+                fi
+            else
+                log_info "  $lib_path/libblkid.so.1 existiert bereits"
+                break
+            fi
+        done
+    fi
 else
     log_error "Kann keine Symlinks fuer libblkid.so erstellen - Bibliothek nicht gefunden!"
 fi

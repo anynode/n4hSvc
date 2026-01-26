@@ -49,6 +49,26 @@ RUN \
              ln -s /lib64/ld-linux-aarch64.so.1 /lib/ld-linux-aarch64.so.1 2>/dev/null || \
              true); \
         fi; \
+        # Create symlinks for libconfig.so.9 in architecture-specific directories
+        LIB_CONFIG_ALPINE=$(find /usr/lib* /lib* -name "libconfig.so*" 2>/dev/null | head -1); \
+        if [ -n "$LIB_CONFIG_ALPINE" ]; then \
+            mkdir -p /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu 2>/dev/null || true; \
+            if [ ! -f /usr/lib/aarch64-linux-gnu/libconfig.so.9 ] && [ ! -f /lib/aarch64-linux-gnu/libconfig.so.9 ]; then \
+                ln -sf "$LIB_CONFIG_ALPINE" /usr/lib/aarch64-linux-gnu/libconfig.so.9 2>/dev/null || \
+                ln -sf "$LIB_CONFIG_ALPINE" /lib/aarch64-linux-gnu/libconfig.so.9 2>/dev/null || true; \
+                echo "Created symlink for libconfig.so.9"; \
+            fi; \
+        fi; \
+        # Create symlinks for libblkid.so.1 in architecture-specific directories
+        LIB_BLKID_ALPINE=$(find /usr/lib* /lib* -name "libblkid.so*" 2>/dev/null | head -1); \
+        if [ -n "$LIB_BLKID_ALPINE" ]; then \
+            mkdir -p /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu 2>/dev/null || true; \
+            if [ ! -f /usr/lib/aarch64-linux-gnu/libblkid.so.1 ] && [ ! -f /lib/aarch64-linux-gnu/libblkid.so.1 ]; then \
+                ln -sf "$LIB_BLKID_ALPINE" /usr/lib/aarch64-linux-gnu/libblkid.so.1 2>/dev/null || \
+                ln -sf "$LIB_BLKID_ALPINE" /lib/aarch64-linux-gnu/libblkid.so.1 2>/dev/null || true; \
+                echo "Created symlink for libblkid.so.1"; \
+            fi; \
+        fi; \
     elif [ -f /etc/debian_version ]; then \
         echo "Installing packages for Debian/Ubuntu..." && \
         apt-get update && \
