@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.8] - 2026-01-26
+
+### Changed
+- AppArmor-Profil erweitert: Explizite Execute-Berechtigungen für Binaries hinzugefügt
+- AppArmor-Profil erweitert: Zugriff auf temporäre Dateien und zusätzliche Systemdateien erlaubt
+
 ## [1.0.7] - 2026-01-26
 
 ### Changed

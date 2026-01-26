@@ -50,14 +50,17 @@ profile net4home flags=(attach_disconnected,mediate_deleted) {
     # Access to options.json and other files within your addon
     /data/** rw,
     
-    # Access required for service functionality
-    /usr/bin/n4hSvc r,
+    # Access required for service functionality - explicit execute permission
+    /usr/bin/n4hSvc rix,
     /bin/bash rix,
     /bin/sh rix,
     /bin/echo ix,
     /etc/passwd r,
+    /etc/group r,
+    /etc/nsswitch.conf r,
+    /etc/resolv.conf r,
     
-    # Library access - critical for binary execution
+    # Library access - critical for binary execution (read and memory map)
     /usr/lib/** rm,
     /lib/** rm,
     /usr/lib64/** rm,
@@ -72,6 +75,10 @@ profile net4home flags=(attach_disconnected,mediate_deleted) {
     # Process and system information
     /proc/** r,
     /sys/** r,
+    
+    # Temporary files and logs
+    /tmp/** rwk,
+    /var/tmp/** rwk,
     
     # Configuration files
     /etc/** r,
@@ -105,11 +112,12 @@ profile net4home flags=(attach_disconnected,mediate_deleted) {
     /data/** rw,
     
     # Access required for service functionality
-    /usr/bin/HSTime r,
+    /usr/bin/HSTime rix,
     /bin/bash rix,
     /bin/sh rix,
     /bin/echo ix,
     /etc/passwd r,
+    /etc/group r,
     
     # Library access
     /usr/lib/** rm,
@@ -122,6 +130,9 @@ profile net4home flags=(attach_disconnected,mediate_deleted) {
     # Process and system information
     /proc/** r,
     /sys/** r,
+    
+    # Temporary files
+    /tmp/** rwk,
     
     # Configuration files
     /etc/** r,
@@ -146,11 +157,12 @@ profile net4home flags=(attach_disconnected,mediate_deleted) {
     /data/** rw,
     
     # Access required for service functionality
-    /usr/bin/HSpr r,
+    /usr/bin/HSpr rix,
     /bin/bash rix,
     /bin/sh rix,
     /bin/echo ix,
     /etc/passwd r,
+    /etc/group r,
     
     # Library access
     /usr/lib/** rm,
@@ -163,6 +175,9 @@ profile net4home flags=(attach_disconnected,mediate_deleted) {
     # Process and system information
     /proc/** r,
     /sys/** r,
+    
+    # Temporary files
+    /tmp/** rwk,
     
     # Configuration files
     /etc/** r,
