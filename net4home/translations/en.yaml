@@ -7,7 +7,7 @@ configuration:
     description: "The TCP/IP port on which the server listens for clients"
   comport:
     name: "Serial Port"
-    description: "The serial device used for communication with net4home bus"
+    description: "Detected serial port. The same list is under Settings, Connectivity, Serial. The port does not need to be entered there again."
   ipv6:
     name: "Enable IPv6"
     description: "Enables IPv6 support"

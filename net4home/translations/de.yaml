@@ -7,7 +7,7 @@ configuration:
     description: "Der TCP/IP Port, auf dem der Server auf Verbindungen wartet"
   comport:
     name: "Serieller Port"
-    description: "Das serielle Gerät, über das die Kommunikation mit den net4home Bus erfolgt"
+    description: "Erkannte serielle Schnittstelle. Dieselbe Liste steht unter Einstellungen, Konnektivität, Seriell. Der Port muss nicht noch einmal dort eingetragen werden."
   ipv6:
     name: "IPv6 aktivieren"
     description: "Aktiviert die Unterstützung für IPv6"

@@ -34,7 +34,7 @@ Der TCP/IP Port, auf dem der Server lauscht.
 
 ### Serial Port (comport)
 
-Das serielle Gerät, über das die Kommunikation mit den net4home Geräten erfolgt.
+Das serielle Gerät, über das die Kommunikation mit den net4home Geräten erfolgt. In der Konfiguration wird eine erkannte Schnittstelle aus derselben Liste gewählt wie unter Einstellungen, Konnektivität, Seriell.
 
 **Standardwert**: `/dev/ttyS0`
 
@@ -111,7 +111,7 @@ Für weitere Informationen zum net4home System besuchen Sie die offizielle Dokum
 
 ## Version
 
-**Version**: 1.0.10
+**Version**: 1.0.11
 
 ## Lizenz
 

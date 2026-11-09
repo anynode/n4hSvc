@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.11] - 2026-11-09
+
+### Changed
+- Serieller Port wird aus den erkannten Schnittstellen gewählt, dieselbe Liste wie unter Einstellungen, Konnektivität, Seriell
+
 ## [1.0.10] - 2026-11-09
 
 ### Added
