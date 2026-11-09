@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.10] - 2026-11-09
+
+### Added
+- build.yaml mit Basis-Image je Architektur, damit der Supervisor das Add-on wieder bauen kann
+
+### Fixed
+- Behebt den fehlgeschlagenen Image-Build von 1.0.9: BUILD_FROM war leer und Docker BuildKit hat das Image abgelehnt
+- Setzt Debian 12 (bookworm) als Basis-Image, passend zu den glibc-Binaries
+
 ## [1.0.9] - 2026-01-26
 
 ### Fixed

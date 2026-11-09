@@ -1,4 +1,4 @@
-ARG BUILD_FROM
+ARG BUILD_FROM=ghcr.io/home-assistant/base-debian:bookworm
 FROM ${BUILD_FROM}
 
 # Set shell
@@ -140,5 +140,5 @@ LABEL \
     io.hass.name="net4home Server" \
     io.hass.description="Add-on für den net4home Server (n4hSvc)" \
     io.hass.type="addon" \
-    io.hass.version="1.0.9" \
+    io.hass.version="1.0.10" \
     io.hass.arch="aarch64|amd64|armv7|armhf"
