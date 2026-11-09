@@ -140,5 +140,5 @@ LABEL \
     io.hass.name="net4home Server" \
     io.hass.description="Add-on für den net4home Server (n4hSvc)" \
     io.hass.type="addon" \
-    io.hass.version="1.0.11" \
+    io.hass.version="1.0.12" \
     io.hass.arch="aarch64|amd64|armv7|armhf"

@@ -664,6 +664,16 @@ if ! kill -0 "$N4HSVC_PID" 2>/dev/null; then
     exit 1
 fi
 
+# The service name is the integration domain. It stays when the repository
+# prefix of the add-on slug changes. host_network makes 127.0.0.1 reachable
+# from Home Assistant.
+log_info "Melde lokalen Dienst net4home an: 127.0.0.1:${PORT}"
+if bashio::discovery "net4home" "{\"host\":\"127.0.0.1\",\"port\":${PORT}}"; then
+    log_info "Dienst net4home angemeldet"
+else
+    log_error "Dienst net4home konnte nicht angemeldet werden"
+fi
+
 # Start HSTime if enabled
 HSTIME_PID=""
 if [ "$ENABLE_HSTIME" = "true" ]; then

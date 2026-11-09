@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.12] - 2026-11-09
+
+### Added
+- Meldet den laufenden Dienst bei Home Assistant unter dem festen Namen `net4home` an, mit `127.0.0.1` und dem konfigurierten Port. Die Integration erkennt ihn daran, ohne den Add-on-Slug zu kennen. Das Add-on speichert kein Passwort.
+
 ## [1.0.11] - 2026-11-09
 
 ### Changed
